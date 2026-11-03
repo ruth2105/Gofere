@@ -1,6 +1,7 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import axios from 'axios';
 import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
@@ -8,23 +9,83 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Calendar, MapPin, Award, CheckCircle2, ExternalLink, ArrowLeft, Clock } from 'lucide-react';
-import { scholarships } from '@/data/scholarships';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
+import { getScholarship } from '@/lib/api/scholarships';
+import { Scholarship } from '@/types';
 
 const subscribeToNothing = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
 
 export default function ScholarshipDetail({ id }: { id: string }) {
+  const [scholarship, setScholarship] = useState<Scholarship | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [notFound, setNotFound] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const mounted = useSyncExternalStore(
     subscribeToNothing,
     getClientSnapshot,
     getServerSnapshot
   );
 
-  const scholarship = scholarships.find((s) => s.id === id);
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setLoadError(false);
+    setNotFound(false);
+    getScholarship(id)
+      .then((item) => {
+        if (active) setScholarship(item);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          setNotFound(true);
+        } else {
+          setLoadError(true);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
 
-  if (!scholarship) {
+    return () => {
+      active = false;
+    };
+  }, [id, retryCount]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <p className="flex-1 flex items-center justify-center text-gray-600" role="status">
+          Loading scholarship details…
+        </p>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center" role="alert">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Scholarship details could not be loaded</h1>
+            <p className="text-gray-600 mb-4">Please check your connection and try again.</p>
+            <Button variant="primary" onClick={() => setRetryCount((count) => count + 1)}>
+              Try Again
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !scholarship) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
@@ -160,17 +221,19 @@ export default function ScholarshipDetail({ id }: { id: string }) {
                     <CardTitle className="text-lg">Ready to Apply?</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <a
-                      href={scholarship.applicationLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <Button variant="primary" className="w-full" size="lg">
-                        <ExternalLink size={20} className="mr-2" />
-                        Apply Now
-                      </Button>
-                    </a>
+                    {scholarship.applicationLink && (
+                      <a
+                        href={scholarship.applicationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <Button variant="primary" className="w-full" size="lg">
+                          <ExternalLink size={20} className="mr-2" />
+                          Apply Now
+                        </Button>
+                      </a>
+                    )}
                     <Link href="/contact" className="block">
                       <Button variant="outline" className="w-full">
                         Get Application Help

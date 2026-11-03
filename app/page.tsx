@@ -20,18 +20,37 @@ import {
   MapPin,
   Clock
 } from 'lucide-react';
-import { scholarships } from '@/data/scholarships';
 import { destinations } from '@/data/destinations';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
+import { getScholarships } from '@/lib/api/scholarships';
+import { Scholarship } from '@/types';
 
 export default function HomePage() {
   const [mounted, setMounted] = useState(false);
+  const [featuredScholarships, setFeaturedScholarships] = useState<Scholarship[]>([]);
+  const [scholarshipsLoading, setScholarshipsLoading] = useState(true);
+  const [scholarshipsError, setScholarshipsError] = useState(false);
   
   useEffect(() => {
     setMounted(true);
+
+    let active = true;
+    getScholarships()
+      .then((items) => {
+        if (active) setFeaturedScholarships(items.filter((item) => item.featured).slice(0, 4));
+      })
+      .catch(() => {
+        if (active) setScholarshipsError(true);
+      })
+      .finally(() => {
+        if (active) setScholarshipsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const featuredScholarships = scholarships.filter(s => s.featured).slice(0, 4);
   const topDestinations = destinations.slice(0, 4);
 
   return (
@@ -146,7 +165,14 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {scholarshipsError ? (
+            <p className="text-gray-600" role="alert">Featured scholarships could not be loaded. Please try the scholarship search later.</p>
+          ) : scholarshipsLoading ? (
+            <p className="text-gray-600" role="status">Loading current scholarship opportunities…</p>
+          ) : featuredScholarships.length === 0 ? (
+            <p className="text-gray-600">There are no featured scholarship opportunities published right now.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {featuredScholarships.map((scholarship) => {
               const daysLeft = mounted ? calculateDaysUntil(scholarship.deadline) : 0;
               
@@ -199,7 +225,8 @@ export default function HomePage() {
                 </Link>
               );
             })}
-          </div>
+            </div>
+          )}
           
           <div className="text-center mt-8 md:hidden">
             <Link href="/scholarships">

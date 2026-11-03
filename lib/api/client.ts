@@ -8,6 +8,34 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
+export interface ScholarshipApiRecord {
+  id: string;
+  slug: string;
+  name: string;
+  short_description: string;
+  description?: string;
+  provider: string;
+  country: string;
+  type: string;
+  level: string;
+  amount: string;
+  amount_type: string;
+  application_deadline: string;
+  application_url?: string;
+  website_url?: string;
+  status: string;
+  is_featured: boolean;
+  eligibility?: string[];
+  fields?: string[];
+}
+
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -232,12 +260,12 @@ export const api = {
       ordering?: string;
       page?: number;
     }) => {
-      const response = await apiClient.get('/scholarships/', { params });
+      const response = await apiClient.get<PaginatedResponse<ScholarshipApiRecord>>('/scholarships/', { params });
       return response.data;
     },
 
     get: async (slug: string) => {
-      const response = await apiClient.get(`/scholarships/${slug}/`);
+      const response = await apiClient.get<ScholarshipApiRecord>(`/scholarships/${slug}/`);
       return response.data;
     },
   },

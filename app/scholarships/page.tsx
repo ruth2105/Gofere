@@ -10,11 +10,16 @@ import { Select } from '@/components/ui/Select';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Search, Filter, Award, Calendar, MapPin, ExternalLink } from 'lucide-react';
-import { scholarships } from '@/data/scholarships';
+import { getScholarships } from '@/lib/api/scholarships';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
+import { Scholarship } from '@/types';
 
 export default function ScholarshipsPage() {
   const [mounted, setMounted] = useState(false);
+  const [scholarships, setScholarships] = useState<Scholarship[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [countryFilter, setCountryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -22,11 +27,28 @@ export default function ScholarshipsPage() {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
 
-  // Get unique countries, types, and levels
+    let active = true;
+    setLoading(true);
+    setLoadError(false);
+    getScholarships()
+      .then((items) => {
+        if (active) setScholarships(items);
+      })
+      .catch(() => {
+        if (active) setLoadError(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [retryCount]);
+
   const countries = ['all', ...Array.from(new Set(scholarships.map(s => s.country)))];
-  const types = ['all', 'Full', 'Partial'];
+  const types = ['all', ...Array.from(new Set(scholarships.map(s => s.type)))];
   const levels = ['all', ...Array.from(new Set(scholarships.map(s => s.level)))];
 
   // Filter scholarships
@@ -54,7 +76,7 @@ export default function ScholarshipsPage() {
               Scholarship Database
             </h1>
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-              Discover {scholarships.length}+ scholarships from around the world to fund your education
+              Discover scholarships from around the world to fund your education
             </p>
           </div>
         </div>
@@ -93,7 +115,7 @@ export default function ScholarshipsPage() {
             />
           </div>
           <div className="mt-4 text-sm text-gray-600">
-            Showing {filteredScholarships.length} of {scholarships.length} scholarships
+            {loading ? 'Loading scholarships…' : `Showing ${filteredScholarships.length} of ${scholarships.length} scholarships`}
           </div>
         </div>
       </section>
@@ -101,7 +123,23 @@ export default function ScholarshipsPage() {
       {/* Scholarships Grid */}
       <section className="flex-1 py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredScholarships.length === 0 ? (
+          {loadError ? (
+            <div className="text-center py-12" role="alert">
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">Scholarships could not be loaded</h3>
+              <p className="text-gray-600 mb-4">Please check your connection and try again.</p>
+              <Button variant="primary" onClick={() => setRetryCount((count) => count + 1)}>
+                Try Again
+              </Button>
+            </div>
+          ) : loading ? (
+            <p className="text-center py-12 text-gray-600" role="status">Loading scholarships…</p>
+          ) : scholarships.length === 0 ? (
+            <div className="text-center py-12">
+              <Filter className="mx-auto mb-4 text-gray-400" size={48} />
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">No scholarships published yet</h3>
+              <p className="text-gray-600">Please check back later for current opportunities.</p>
+            </div>
+          ) : filteredScholarships.length === 0 ? (
             <div className="text-center py-12">
               <Filter className="mx-auto mb-4 text-gray-400" size={48} />
               <h3 className="text-xl font-semibold text-gray-700 mb-2">No scholarships found</h3>

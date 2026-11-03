@@ -1,8 +1,8 @@
 import ScholarshipDetail from './ScholarshipDetail';
-import { scholarships } from '@/data/scholarships';
 
 export function generateStaticParams() {
-  return scholarships.map(({ id }) => ({ id }));
+  // Cache Components requires a build-time sample; real scholarship slugs resolve on demand.
+  return [{ id: '_route-validation' }];
 }
 
 export default async function ScholarshipDetailPage({
