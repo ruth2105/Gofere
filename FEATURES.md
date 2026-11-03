@@ -101,11 +101,8 @@
   - [ ] `/exam-prep/toefl` - TOEFL preparation with sections
   - [ ] `/exam-prep/duolingo` - Duolingo preparation with sections
   
-- [ ] Services pages:
-  - [ ] `/services` - All services overview
-  - [ ] `/services/counseling` - Study abroad counseling
-  - [ ] `/services/applications` - Application support
-  - [ ] `/services/visa` - Visa guidance
+- [x] `/services` - API-backed active service catalogue
+- [x] `/services/[slug]` - API-backed service details
   
 - [ ] About & Contact:
   - [ ] `/about` - Company information, team, mission

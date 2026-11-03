@@ -151,9 +151,9 @@ export default function HomePage() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <GraduationCap className="text-blue-600" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Application Support</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Published Services</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Expert guidance on university applications, document preparation, and visa processes.
+                Browse services currently published in the Gofer Exam catalogue. Availability and terms should be confirmed before purchase.
               </p>
             </div>
             
@@ -161,9 +161,9 @@ export default function HomePage() {
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <Users className="text-blue-600" size={24} />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Consultation</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Consultation Enquiries</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Connect with experienced consultants who understand your study abroad goals.
+                Contact Gofer Exam to ask about currently available consultation options.
               </p>
             </div>
           </div>

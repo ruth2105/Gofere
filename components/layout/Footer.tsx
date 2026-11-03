@@ -143,27 +143,11 @@ export const Footer: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  href="/services/counseling" 
+                <Link
+                  href="/services"
                   className="text-gray-300 hover:text-white transition-colors text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-teal rounded"
                 >
-                  Study Abroad Counseling
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/services/applications" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-teal rounded"
-                >
-                  Application Support
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/services/visa" 
-                  className="text-gray-300 hover:text-white transition-colors text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-teal rounded"
-                >
-                  Visa Guidance
+                  Browse Services
                 </Link>
               </li>
               <li>
