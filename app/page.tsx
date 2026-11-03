@@ -16,12 +16,12 @@ import {
   ArrowRight,
   Check,
   Calendar,
-  MapPin,
   Clock
 } from 'lucide-react';
-import { destinations } from '@/data/destinations';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
 import { getScholarships } from '@/lib/api/scholarships';
+import { getDestinations } from '@/lib/api/catalogues';
+import { DestinationApiRecord } from '@/lib/api/client';
 import { Scholarship } from '@/types';
 
 const subscribeToNothing = () => () => {};
@@ -32,6 +32,9 @@ export default function HomePage() {
   const [featuredScholarships, setFeaturedScholarships] = useState<Scholarship[]>([]);
   const [scholarshipsLoading, setScholarshipsLoading] = useState(true);
   const [scholarshipsError, setScholarshipsError] = useState(false);
+  const [destinations, setDestinations] = useState<DestinationApiRecord[]>([]);
+  const [destinationsLoading, setDestinationsLoading] = useState(true);
+  const [destinationsError, setDestinationsError] = useState(false);
   const mounted = useSyncExternalStore(
     subscribeToNothing,
     getClientSnapshot,
@@ -56,7 +59,23 @@ export default function HomePage() {
     };
   }, []);
 
-  const topDestinations = destinations.slice(0, 4);
+  useEffect(() => {
+    let active = true;
+    getDestinations()
+      .then((items) => {
+        if (active) setDestinations(items.slice(0, 4));
+      })
+      .catch(() => {
+        if (active) setDestinationsError(true);
+      })
+      .finally(() => {
+        if (active) setDestinationsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -347,21 +366,27 @@ export default function HomePage() {
             <p className="text-gray-600">
               Compare popular destinations for international students
             </p>
-            <p className="mt-2 text-sm text-amber-800">
-              Destination details shown here use demonstration data; verify current facts with official sources.
-            </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            {topDestinations.map((destination) => (
-              <Link key={destination.id} href={`/study-abroad/${destination.id}`}>
+          {destinationsLoading ? (
+            <p className="text-gray-600" role="status">Loading destinations…</p>
+          ) : destinationsError ? (
+            <p className="text-gray-600" role="alert">
+              Destinations could not be loaded. Please try the destination directory later.
+            </p>
+          ) : destinations.length === 0 ? (
+            <p className="text-gray-600">No destinations have been published yet.</p>
+          ) : (
+            <div className="grid md:grid-cols-2 gap-6">
+            {destinations.map((destination) => (
+              <Link key={destination.id} href={`/study-abroad/${destination.slug}`}>
                 <Card hover interactive className="h-full" as="article">
                   <CardHeader>
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="text-4xl">{destination.flag}</span>
-                          <CardTitle className="text-2xl">{destination.country}</CardTitle>
+                          <span className="text-4xl" aria-hidden="true">{destination.flag_emoji || '🌍'}</span>
+                          <CardTitle className="text-2xl">{destination.name}</CardTitle>
                         </div>
                         <CardDescription className="text-base line-clamp-2">
                           {destination.description}
@@ -372,26 +397,17 @@ export default function HomePage() {
                   <CardContent>
                     <div className="space-y-3 text-sm">
                       <div className="flex items-start">
-                        <MapPin size={16} className="mr-2 mt-0.5 text-gray-400 flex-shrink-0" />
-                        <div>
-                          <p className="text-gray-500">Popular Cities</p>
-                          <p className="text-gray-900 font-medium">
-                            {destination.popularCities.slice(0, 3).join(', ')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-start">
                         <GraduationCap size={16} className="mr-2 mt-0.5 text-gray-400 flex-shrink-0" />
                         <div>
-                          <p className="text-gray-500">Universities</p>
-                          <p className="text-gray-900 font-medium">{destination.topUniversities}+ institutions</p>
+                          <p className="text-gray-500">Listed universities</p>
+                          <p className="text-gray-900 font-medium">{destination.total_universities}</p>
                         </div>
                       </div>
                       <div className="flex items-start">
                         <Globe size={16} className="mr-2 mt-0.5 text-gray-400 flex-shrink-0" />
                         <div>
-                          <p className="text-gray-500">Average Tuition</p>
-                          <p className="text-gray-900 font-medium">{destination.averageTuition}</p>
+                          <p className="text-gray-500">Primary language</p>
+                          <p className="text-gray-900 font-medium">{destination.primary_language || 'Not provided'}</p>
                         </div>
                       </div>
                     </div>
@@ -399,7 +415,8 @@ export default function HomePage() {
                 </Card>
               </Link>
             ))}
-          </div>
+            </div>
+          )}
           
           <div className="text-center mt-8">
             <Link href="/study-abroad">

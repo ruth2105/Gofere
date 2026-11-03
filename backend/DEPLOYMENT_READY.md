@@ -264,7 +264,7 @@ const fetchUser = async () => {
 ### Environment Variables
 Add to `.env.local` in frontend:
 ```
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+API_PROXY_TARGET=http://localhost:8000/api/v1
 ```
 
 ---

@@ -118,7 +118,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'apps.accounts.authentication.CookieJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -132,6 +132,15 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'apps.common.exceptions.custom_exception_handler',
 }
+
+AUTH_ACCESS_COOKIE_NAME = 'access_token'
+AUTH_REFRESH_COOKIE_NAME = 'refresh_token'
+AUTH_ACCESS_COOKIE_PATH = '/api/v1/'
+AUTH_REFRESH_COOKIE_PATH = '/api/v1/auth/'
+AUTH_COOKIE_SECURE = True
+AUTH_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Simple JWT Settings
 from datetime import timedelta

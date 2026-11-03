@@ -1,11 +1,83 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { UserCircle, LogIn, UserPlus } from 'lucide-react';
+import { UserCircle, UserPlus } from 'lucide-react';
+import { api, UserApiRecord } from '@/lib/api/client';
 
 export default function StudentPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<UserApiRecord | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    api.auth.getCurrentUser()
+      .then((profile) => {
+        if (active) setUser(profile);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          router.replace('/student/login');
+        } else {
+          setLoadError(true);
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await api.auth.logout();
+    } finally {
+      router.replace('/student/login');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <p className="flex-1 flex items-center justify-center text-gray-600" role="status">
+          Checking your session…
+        </p>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (loadError || !user) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navigation />
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center" role="alert">
+            <h1 className="mb-3 text-2xl font-bold text-gray-900">Your account could not be loaded</h1>
+            <p className="mb-5 text-gray-600">Please check your connection and try again.</p>
+            <Button variant="primary" onClick={() => window.location.reload()}>Try Again</Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -16,40 +88,47 @@ export default function StudentPage() {
             <UserCircle className="mx-auto mb-4 text-primary-600" size={64} />
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Student Portal</h1>
             <p className="text-lg text-gray-600">
-              Student sign-in and registration screens are available, but account features are not yet connected to the backend.
+              Signed in as {user.email}
             </p>
+            <p className="mt-2 text-sm text-gray-500">Account type: {user.role.toLocaleLowerCase()}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-5"
+              isLoading={loggingOut}
+              onClick={handleLogout}
+            >
+              Sign Out
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
             <Card className="text-center">
               <CardHeader>
-                <LogIn className="mx-auto mb-3 text-primary-600" size={48} />
-                <CardTitle>Sign In</CardTitle>
+                <UserCircle className="mx-auto mb-3 text-primary-600" size={48} />
+                <CardTitle>Account Profile</CardTitle>
                 <CardDescription>
-                  The sign-in screen is available, but authentication is not yet connected.
+                  {user.full_name || user.email}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <Link href="/student/login">
-                  <Button variant="primary" className="w-full">
-                    Sign In
-                  </Button>
-                </Link>
+              <CardContent className="space-y-2 text-sm text-gray-600">
+                <p>{user.email}</p>
+                {user.phone_number && <p>{user.phone_number}</p>}
               </CardContent>
             </Card>
 
             <Card className="text-center">
               <CardHeader>
                 <UserPlus className="mx-auto mb-3 text-primary-600" size={48} />
-                <CardTitle>Create Account</CardTitle>
+                <CardTitle>Explore Scholarships</CardTitle>
                 <CardDescription>
-                  The registration form is available as a preview; it does not yet create an account.
+                  Search the current published opportunities catalogue.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/student/register">
+                <Link href="/scholarships">
                   <Button variant="secondary" className="w-full">
-                    Create Account
+                    Browse Scholarships
                   </Button>
                 </Link>
               </CardContent>
@@ -58,7 +137,7 @@ export default function StudentPage() {
 
           <div className="mt-12 bg-white rounded-xl p-8 shadow-md">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              Planned Account Features
+              Student Workflows Still in Progress
             </h2>
             <p className="text-center text-sm text-amber-800">
               These workflows are not currently available in the student portal.

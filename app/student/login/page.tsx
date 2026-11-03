@@ -2,20 +2,35 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { LogIn } from 'lucide-react';
+import { api } from '@/lib/api/client';
+import { getApiErrorMessage } from '@/lib/api/errors';
 
 export default function StudentLoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert('Authentication system will be implemented in the next phase. This is a demo page.');
+    setSubmitting(true);
+    setErrorMessage('');
+    try {
+      await api.auth.login({ email, password });
+      router.replace('/student');
+    } catch (error: unknown) {
+      setErrorMessage(getApiErrorMessage(error, 'Sign in failed. Please check your details and try again.'));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -51,18 +66,20 @@ export default function StudentLoginPage() {
                   required
                 />
                 
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center">
-                    <input type="checkbox" className="mr-2" />
-                    Remember me
-                  </label>
+                <div className="flex justify-end text-sm">
                   <Link href="/student/forgot-password" className="text-primary-600 hover:text-primary-700">
                     Forgot password?
                   </Link>
                 </div>
 
-                <Button type="submit" variant="primary" className="w-full">
-                  Sign In
+                {errorMessage && (
+                  <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
+                    {errorMessage}
+                  </p>
+                )}
+
+                <Button type="submit" variant="primary" className="w-full" isLoading={submitting}>
+                  {submitting ? 'Signing In…' : 'Sign In'}
                 </Button>
               </form>
 
@@ -75,10 +92,10 @@ export default function StudentLoginPage() {
                 </p>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+              <div className="mt-6 rounded-lg bg-blue-50 p-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Demo Notice:</strong> Authentication will be implemented in the next development phase. 
-                  This is a placeholder login page.
+                  Your session is protected with secure HttpOnly cookies. If you need a password
+                  reset, contact Gofer Exam support.
                 </p>
               </div>
             </CardContent>

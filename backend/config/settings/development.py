@@ -7,6 +7,7 @@ from decouple import config
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+AUTH_COOKIE_SECURE = False
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 

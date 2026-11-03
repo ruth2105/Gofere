@@ -750,6 +750,12 @@ class IsAssignedConsultant(BasePermission):
 
 ### API Client Architecture
 
+> **Implementation note:** The sample below describes the original proposal and
+> is not the current browser-auth implementation. The frontend now proxies API
+> calls through `/api/v1` using `API_PROXY_TARGET`. Access and refresh JWTs are
+> HttpOnly cookies; mutations require a CSRF token. Do not copy the localStorage
+> token-storage sample below into production code.
+
 ```typescript
 // lib/api/client.ts
 import axios, { AxiosInstance } from 'axios';

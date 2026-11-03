@@ -2,31 +2,57 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { UserPlus } from 'lucide-react';
+import { api } from '@/lib/api/client';
+import { getApiErrorMessage } from '@/lib/api/errors';
 
 export default function StudentRegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    country: '',
     password: '',
     confirmPassword: ''
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage('');
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setErrorMessage('Passwords do not match.');
       return;
     }
-    alert('Registration system will be implemented in the next phase. This is a demo page.');
+    const nameParts = formData.name.trim().split(/\s+/);
+    if (nameParts.length < 2) {
+      setErrorMessage('Enter both your first name and last name.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await api.auth.register({
+        email: formData.email,
+        first_name: nameParts[0],
+        last_name: nameParts.slice(1).join(' '),
+        phone_number: formData.phone,
+        password: formData.password,
+        password2: formData.confirmPassword,
+      });
+      router.replace('/student');
+    } catch (error: unknown) {
+      setErrorMessage(getApiErrorMessage(error, 'Account creation failed. Please try again.'));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -79,23 +105,6 @@ export default function StudentRegisterPage() {
                   required
                 />
 
-                <Select
-                  name="country"
-                  label="Country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  options={[
-                    { value: '', label: 'Select your country' },
-                    { value: 'Ethiopia', label: 'Ethiopia' },
-                    { value: 'Kenya', label: 'Kenya' },
-                    { value: 'Nigeria', label: 'Nigeria' },
-                    { value: 'Ghana', label: 'Ghana' },
-                    { value: 'South Africa', label: 'South Africa' },
-                    { value: 'Other', label: 'Other' }
-                  ]}
-                  required
-                />
-
                 <Input
                   type="password"
                   name="password"
@@ -130,8 +139,14 @@ export default function StudentRegisterPage() {
                   </label>
                 </div>
 
-                <Button type="submit" variant="primary" className="w-full">
-                  Create Account
+                {errorMessage && (
+                  <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
+                    {errorMessage}
+                  </p>
+                )}
+
+                <Button type="submit" variant="primary" className="w-full" isLoading={submitting}>
+                  {submitting ? 'Creating Account…' : 'Create Account'}
                 </Button>
               </form>
 
@@ -146,8 +161,8 @@ export default function StudentRegisterPage() {
 
               <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                 <p className="text-sm text-blue-800">
-                  <strong>Demo Notice:</strong> Registration functionality will be implemented in the next development phase. 
-                  This is a placeholder registration page.
+                  Your session is protected with secure HttpOnly cookies. Account creation stores
+                  your name, email address, and phone number.
                 </p>
               </div>
             </CardContent>

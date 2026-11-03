@@ -4,6 +4,8 @@ Test settings for GOFER EXAM project.
 
 from .base import *
 
+AUTH_COOKIE_SECURE = False
+
 # Use SQLite for faster tests
 DATABASES = {
     'default': {

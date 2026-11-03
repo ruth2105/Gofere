@@ -13,18 +13,21 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 
 ### Current Functionality
 - **📚 Scholarship Discovery**: API-backed catalogue with search, filters, and loading/error/empty states. The deployed catalogue is currently empty.
-- **🌍 Study Abroad Destinations**: Destination guide pages currently use local demonstration content.
+- **🌍 Study Abroad Destinations**: API-backed destination listings and detail pages with loading/error/empty states. The deployed catalogue is currently empty.
+- **🎓 University Directory**: API-backed university listings and detail pages with search and loading/error/empty states. The deployed catalogue is currently empty.
 - **📝 Exam Preparation**: Informational preparation pages for IELTS, TOEFL, and the Duolingo English Test; these are not practice-test products.
 - **🏆 Services Showcase**: Public service information, with provider/referral distinctions.
 
 ### Interactive Features
 - Scholarship search and filtering by country, type, and level
 - Study destination detail pages
+- University directory search and detail pages
 - Public navigation and service/contact information
 - Responsive layouts (manual device/accessibility sign-off is still required)
 
 ### Account and administration status
-- Student login and registration pages are present, but the frontend is not yet connected to backend authentication.
+- Student registration, login, current profile, and logout use the Django API through same-origin proxy routes. JWTs are set as HttpOnly cookies and unsafe requests require CSRF tokens.
+- Password reset is not available. Student application tracking, document uploads, and consultation booking remain incomplete.
 - Django Admin provides scholarship management, including draft/publish and unpublish controls.
 - Student/consultant dashboards, application tracking, document uploads, and analytics are not complete user workflows.
 
@@ -110,8 +113,10 @@ http://localhost:3000
 ## 🚀 Deployment Preview
 
 The Render Blueprint in `render.yaml` deploys the Next.js frontend, Django API,
-and PostgreSQL database. The frontend is configured to call the API using
-`NEXT_PUBLIC_API_URL`, and the API allows the deployed frontend origin.
+and PostgreSQL database. The browser calls the API through a same-origin Next.js
+rewrite configured by the server-only `API_PROXY_TARGET` variable. This keeps
+the HttpOnly authentication cookies on the frontend origin and avoids exposing
+JWTs to browser storage.
 
 The included Render services use free plans for preview purposes. Free Render
 web services can sleep when idle, free Postgres databases expire after 30 days,
@@ -124,10 +129,11 @@ data.
 ### Public Pages
 - Homepage (`/`)
 - Scholarship catalogue and detail (`/scholarships`, `/scholarships/[id]`); real detail pages require a published API record.
-- Study destinations (`/study-abroad`, `/study-abroad/[id]`); currently demonstration content.
+- Study destinations (`/study-abroad`, `/study-abroad/[id]`); driven by the destination API.
+- University directory (`/universities`, `/universities/[id]`); the deployed catalogue is currently empty.
 - Exam preparation hub and information pages (`/exam-prep`, `/exam-prep/ielts`, `/exam-prep/toefl`, `/exam-prep/duolingo`)
 - About, services, contact, FAQ, privacy, terms, and disclaimer pages.
-- Student login, registration, and password-assistance information pages; authentication and password reset are not integrated in the frontend.
+- Student login and registration (`/student/login`, `/student/register`), authenticated profile (`/student`), and password-assistance notice (`/student/forgot-password`); password reset is not implemented.
 
 ## 🎨 Design System
 
@@ -184,8 +190,10 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] Django/PostgreSQL deployment and public scholarship, university, and destination catalogue APIs
 - [x] Django Admin scholarship draft/publish controls
 - [x] Registration, login, refresh, logout, and current-user backend endpoints
-- [ ] Connect frontend authentication securely to the backend
-- [ ] Connect universities, destinations, and services pages to maintained API data
+- [x] Connect frontend registration/login/profile/logout using HttpOnly cookie sessions and CSRF protection
+- [x] Connect university and destination pages to API-backed data
+- [ ] Create and verify maintained university/destination records through Django Admin
+- [ ] Expose services through a maintained API and connect the services pages
 - [ ] Implement and test application, consultation, document, and notification API workflows
 - [ ] Confirm deployed database backup and retention plan
 - [ ] Verify a real admin-created published scholarship through listing and detail in production
