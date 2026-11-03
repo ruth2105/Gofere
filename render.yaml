@@ -6,6 +6,16 @@ databases:
 
 services:
   - type: web
+    name: gofere-web-preview
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://gofere-api-ruth2105.onrender.com/api/v1
+
+  - type: web
     name: gofere-api-ruth2105
     runtime: python
     plan: free
@@ -27,6 +37,6 @@ services:
       - key: ALLOWED_HOSTS
         value: gofere-api-ruth2105.onrender.com
       - key: CORS_ALLOWED_ORIGINS
-        value: https://gofere.vercel.app
+        value: https://gofere-web-preview.onrender.com,https://gofere.vercel.app
       - key: CSRF_TRUSTED_ORIGINS
         value: https://gofere-api-ruth2105.onrender.com

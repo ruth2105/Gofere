@@ -111,15 +111,9 @@ http://localhost:3000
 
 ## 🚀 Deployment Preview
 
-The project includes a Render Blueprint in `render.yaml` for the Django API and
-PostgreSQL database. Deploy the frontend from the repository root as a Next.js
-project on Vercel.
-
-1. Deploy the Render Blueprint and set `CORS_ALLOWED_ORIGINS` to the exact
-   HTTPS origin assigned to the Vercel project (for example,
-   `https://your-project.vercel.app`).
-2. In Vercel, set `NEXT_PUBLIC_API_URL` to the Render API URL ending in
-   `/api/v1`, then redeploy the frontend.
+The Render Blueprint in `render.yaml` deploys the Next.js frontend, Django API,
+and PostgreSQL database. The frontend is configured to call the API using
+`NEXT_PUBLIC_API_URL`, and the API allows the deployed frontend origin.
 
 The included Render services use free plans for preview purposes. Free Render
 web services can sleep when idle, free Postgres databases expire after 30 days,
