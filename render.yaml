@@ -1,0 +1,32 @@
+databases:
+  - name: gofere-db
+    databaseName: gofere
+    user: gofere
+    plan: free
+
+services:
+  - type: web
+    name: gofere-api-ruth2105
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements/production.txt && python manage.py collectstatic --no-input
+    startCommand: python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/v1/schema/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gofere-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: gofere-api-ruth2105.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://gofere.vercel.app
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://gofere-api-ruth2105.onrender.com

@@ -1,6 +1,3 @@
-'use client';
-
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
@@ -11,9 +8,16 @@ import { ArrowLeft, MapPin, DollarSign, Calendar, CheckCircle2 } from 'lucide-re
 import { destinations } from '@/data/destinations';
 import { universities } from '@/data/universities';
 
-export default function DestinationDetailPage() {
-  const params = useParams();
-  const id = params?.id as string;
+export function generateStaticParams() {
+  return destinations.map(({ id }) => ({ id }));
+}
+
+export default async function DestinationDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const destination = destinations.find((d) => d.id === id);
 
   if (!destination) {

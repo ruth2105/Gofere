@@ -4,34 +4,32 @@ Production settings for GOFER EXAM project.
 
 from .base import *
 from decouple import config
+import environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
+ALLOWED_HOSTS = [
+    host for host in config('ALLOWED_HOSTS', default='').split(',') if host
+]
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT', default='5432'),
-        'CONN_MAX_AGE': 600,
-        'OPTIONS': {
-            'sslmode': 'require',
-        }
-    }
-}
+DATABASES = {'default': environ.Env().db_url('DATABASE_URL')}
+DATABASES['default']['CONN_MAX_AGE'] = 600
+DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
 # CORS Settings for Production
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='').split(',')
+CORS_ALLOWED_ORIGINS = [
+    origin for origin in config('CORS_ALLOWED_ORIGINS', default='').split(',') if origin
+]
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    origin for origin in config('CSRF_TRUSTED_ORIGINS', default='').split(',') if origin
+]
 
 # Security Settings
 SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
@@ -57,15 +55,3 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 # AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 # AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 # AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
-
-# Logging for production
-LOGGING['handlers']['file'] = {
-    'level': 'ERROR',
-    'class': 'logging.handlers.RotatingFileHandler',
-    'filename': BASE_DIR / 'logs' / 'django.log',
-    'maxBytes': 1024 * 1024 * 10,  # 10 MB
-    'backupCount': 5,
-    'formatter': 'verbose',
-}
-
-LOGGING['loggers']['django']['handlers'] = ['console', 'file']
