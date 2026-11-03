@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [{
       source: "/api/v1/:path*",
-      destination: `${apiProxyTarget}/:path*`,
+      destination: `${apiProxyTarget}/:path*/`,
     }];
   },
   /* config options here */
