@@ -68,6 +68,11 @@ export default function ExamPrepPage() {
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
               Review practical checklists and continue to official test-provider preparation resources.
             </p>
+            <Link href="/exam-prep/practice-test" className="mt-6 inline-block">
+              <Button variant="secondary">
+                Try General English Practice <ArrowRight size={16} className="ml-2" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

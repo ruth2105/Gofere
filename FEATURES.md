@@ -134,7 +134,7 @@
 - [ ] `/admin/applications` - Application oversight
 
 ### Interactive Features
-- [ ] Practice test functionality
+- [x] `/exam-prep/practice-test` - Original general-English quiz with feedback and session score (not an official test simulation)
 - [ ] Document upload system
 - [ ] Real-time notifications
 - [ ] Email integration
