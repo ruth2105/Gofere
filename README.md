@@ -184,6 +184,7 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] API-backed scholarship listing with search and filters
 - [x] Original general-English practice quiz, deployed and verified; it is not an official test simulation
 - [x] Keyboard skip link and reduced-motion preference support; broader accessibility sign-off is still pending
+- [x] Responsive navigation avoids horizontal overflow at tested 390–1440px widths on the exam-prep page; site-wide and cross-browser checks remain pending
 - [ ] Manual responsive, accessibility, and cross-browser sign-off
 - [ ] Legal review of privacy and terms notices
 - [ ] Verified real catalogue data

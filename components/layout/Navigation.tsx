@@ -89,7 +89,7 @@ export const Navigation: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden xl:flex items-center space-x-1">
             {navLinks.map((link) => {
               const active = isActive(link.href);
               return (
@@ -119,7 +119,7 @@ export const Navigation: React.FC = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden xl:flex items-center space-x-3">
             <Link href="/student/login">
               <Button variant="ghost" size="sm">
                 Sign In
@@ -137,7 +137,7 @@ export const Navigation: React.FC = () => {
             ref={menuButtonRef}
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
-              "md:hidden p-2 rounded-md transition-all duration-200",
+              "xl:hidden p-2 rounded-md transition-all duration-200",
               "text-gray-700 hover:bg-gray-100 hover:text-primary-600",
               "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200",
               "active:scale-95"
@@ -156,7 +156,7 @@ export const Navigation: React.FC = () => {
       <div
         id="mobile-menu"
         className={cn(
-          "md:hidden bg-white border-t overflow-hidden transition-all duration-300 ease-in-out",
+          "xl:hidden bg-white border-t overflow-hidden transition-all duration-300 ease-in-out",
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}
         aria-hidden={!isOpen}
