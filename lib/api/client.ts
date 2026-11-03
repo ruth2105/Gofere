@@ -115,6 +115,31 @@ export interface UserApiRecord {
   date_joined: string;
 }
 
+export interface ApplicationApiRecord {
+  id: string;
+  application_type: 'UNIVERSITY' | 'SCHOLARSHIP';
+  university: string | null;
+  university_name: string | null;
+  program_name: string;
+  degree_level: string;
+  scholarship: string | null;
+  scholarship_name: string | null;
+  status: 'DRAFT' | 'SUBMITTED' | 'UNDER_REVIEW' | 'ACCEPTED' | 'REJECTED' | 'WAITLISTED' | 'WITHDRAWN';
+  submission_date: string | null;
+  deadline_date: string | null;
+  decision_date: string | null;
+  application_id: string;
+  application_url: string;
+  notes: string;
+  status_updates: Array<{
+    status: string;
+    note: string;
+    timestamp: string;
+  }>;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface PaginatedResponse<T> {
   count: number;
   next: string | null;
@@ -275,6 +300,47 @@ export const api = {
     }) => {
       const response = await apiClient.patch<UserApiRecord>('/auth/me/', data);
       currentUser = response.data;
+      return response.data;
+    },
+  },
+
+  applications: {
+    list: async (params?: { page?: number }) => {
+      const response = await apiClient.get<PaginatedResponse<ApplicationApiRecord>>(
+        '/applications/',
+        { params }
+      );
+      return response.data;
+    },
+
+    create: async (data: {
+      application_type: 'UNIVERSITY' | 'SCHOLARSHIP';
+      university?: string | null;
+      scholarship?: string | null;
+      program_name?: string;
+      degree_level?: string;
+      deadline_date?: string | null;
+      application_id?: string;
+      application_url?: string;
+      notes?: string;
+    }) => {
+      const response = await apiClient.post<ApplicationApiRecord>('/applications/', data);
+      return response.data;
+    },
+
+    submit: async (id: string) => {
+      const response = await apiClient.post<ApplicationApiRecord>(
+        `/applications/${id}/submit/`,
+        {}
+      );
+      return response.data;
+    },
+
+    withdraw: async (id: string) => {
+      const response = await apiClient.post<ApplicationApiRecord>(
+        `/applications/${id}/withdraw/`,
+        {}
+      );
       return response.data;
     },
   },

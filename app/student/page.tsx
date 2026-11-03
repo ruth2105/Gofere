@@ -8,7 +8,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { UserCircle, UserPlus } from 'lucide-react';
+import { FileText, UserCircle, UserPlus } from 'lucide-react';
 import { api, UserApiRecord } from '@/lib/api/client';
 
 export default function StudentPage() {
@@ -102,7 +102,7 @@ export default function StudentPage() {
             </Button>
           </div>
 
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
             <Card className="text-center">
               <CardHeader>
                 <UserCircle className="mx-auto mb-3 text-primary-600" size={48} />
@@ -133,20 +133,33 @@ export default function StudentPage() {
                 </Link>
               </CardContent>
             </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <FileText className="mx-auto mb-3 text-primary-600" size={48} />
+                <CardTitle>Application Tracker</CardTitle>
+                <CardDescription>
+                  Keep a private record of your university and scholarship applications.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/student/applications">
+                  <Button variant="secondary" className="w-full">
+                    Track Applications
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="mt-12 bg-white rounded-xl p-8 shadow-md">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              Student Workflows Still in Progress
+              Other Student Workflows in Progress
             </h2>
             <p className="text-center text-sm text-amber-800">
-              These workflows are not currently available in the student portal.
+              Document uploads and consultation booking are not currently available.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">📚 Manage Applications</h3>
-                <p className="text-sm text-gray-600">Track your university and scholarship applications in one place</p>
-              </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">📄 Upload Documents</h3>
                 <p className="text-sm text-gray-600">Store transcripts, test scores, and recommendation letters securely</p>

@@ -2,6 +2,7 @@ import {
   api,
   DestinationApiRecord,
   PaginatedResponse,
+  ScholarshipApiRecord,
   ServiceApiRecord,
   UniversityApiRecord,
 } from './client';
@@ -32,6 +33,10 @@ export function getDestination(slug: string): Promise<DestinationApiRecord> {
 
 export function getUniversities(country?: string): Promise<UniversityApiRecord[]> {
   return getAllPages((page) => api.universities.list({ page, country }));
+}
+
+export function getScholarships(): Promise<ScholarshipApiRecord[]> {
+  return getAllPages((page) => api.scholarships.list({ page }));
 }
 
 export function getUniversity(slug: string): Promise<UniversityApiRecord> {

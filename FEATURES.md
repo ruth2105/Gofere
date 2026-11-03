@@ -108,11 +108,11 @@
   - [ ] `/about` - Company information, team, mission
   - [ ] `/contact` - Contact form, consultation booking
 
-### Student Portal (Data Structure Ready)
+### Student Portal (Partially Available)
 - [ ] `/student/login` - Authentication
 - [ ] `/student/register` - Registration
-- [ ] `/student/dashboard` - Main dashboard
-- [ ] `/student/applications` - Application tracker
+- [x] `/student` - Authenticated student dashboard
+- [x] `/student/applications` - Private application tracker (create drafts, mark submitted, withdraw)
 - [ ] `/student/documents` - Document manager
 - [ ] `/student/exam-prep` - Personal exam prep
 - [ ] `/student/consultations` - Consultation scheduler

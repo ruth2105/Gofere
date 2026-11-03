@@ -23,6 +23,7 @@ urlpatterns = [
     
     # API v1 endpoints
     path('api/v1/auth/', include('apps.accounts.urls')),
+    path('api/v1/applications/', include('apps.applications.urls')),
     path('api/v1/scholarships/', include('apps.scholarships.urls')),
     path('api/v1/services/', include('apps.services.urls')),
     path('api/v1/universities/', include('apps.universities.urls')),

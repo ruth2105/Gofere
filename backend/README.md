@@ -170,6 +170,18 @@ Once the server is running, access interactive API documentation:
 - `GET /api/v1/auth/me/` - Get current user profile
 - `PATCH /api/v1/auth/me/` - Update current user profile
 
+### Student Applications
+- `GET /api/v1/applications/` - List the authenticated student's applications
+- `POST /api/v1/applications/` - Create a draft for one university or published scholarship
+- `GET /api/v1/applications/{id}/` - Retrieve an owned application
+- `PATCH /api/v1/applications/{id}/` - Edit an owned draft
+- `POST /api/v1/applications/{id}/submit/` - Mark a draft as submitted to the provider
+- `POST /api/v1/applications/{id}/withdraw/` - Withdraw an owned submitted application
+
+Application records are scoped to the authenticated student. Students cannot set the owner,
+consultant, staff notes, or workflow status directly. Marking an application as submitted only
+updates the student's tracker; it does not send an application to an institution.
+
 ### Scholarships
 - `GET /api/v1/scholarships/` - List published scholarships (with filters)
 - `GET /api/v1/scholarships/{slug}/` - Get a published scholarship
@@ -184,7 +196,8 @@ Once the server is running, access interactive API documentation:
 - `GET /api/v1/destinations/` - List study destinations
 - `GET /api/v1/destinations/{slug}/` - Get destination details
 
-Services, applications, consultations, documents, notifications, and consultant/student profile models are not currently exposed as API routes.
+Services are exposed through the public catalogue API. Consultation booking, document management,
+notifications, and consultant profile models are not currently exposed as API routes.
 
 ## Authentication
 
