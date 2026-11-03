@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, GraduationCap } from 'lucide-react';
@@ -10,6 +10,21 @@ import { cn } from '@/lib/utils';
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -30,7 +45,7 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-40" role="navigation" aria-label="Main navigation">
+    <nav className="bg-white shadow-md sticky top-0 z-40" aria-label="Main navigation">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -54,14 +69,13 @@ export const Navigation: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1" role="menubar">
+          <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => {
               const active = isActive(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  role="menuitem"
                   className={cn(
                     'px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
                     'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200',
@@ -100,6 +114,7 @@ export const Navigation: React.FC = () => {
 
           {/* Mobile menu button */}
           <button
+            ref={menuButtonRef}
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
               "md:hidden p-2 rounded-md transition-all duration-200",
@@ -124,6 +139,7 @@ export const Navigation: React.FC = () => {
           isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
         )}
         aria-hidden={!isOpen}
+        inert={!isOpen}
       >
         <div className="px-2 pt-2 pb-3 space-y-1">
           {navLinks.map((link) => {

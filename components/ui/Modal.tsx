@@ -51,13 +51,13 @@ export const Modal: React.FC<ModalProps> = ({
       if (closeButtonRef.current) {
         closeButtonRef.current.focus();
       } else {
-        // Find first focusable element
         const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
-        if (focusableElements && focusableElements.length > 0) {
-          focusableElements[0].focus();
-        }
+        const firstFocusable = Array.from(focusableElements ?? []).find(
+          (element) => element.tabIndex >= 0 && element.getClientRects().length > 0
+        );
+        (firstFocusable ?? modalRef.current)?.focus();
       }
     };
 
@@ -83,8 +83,22 @@ export const Modal: React.FC<ModalProps> = ({
       const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+      const visibleFocusableElements = Array.from(focusableElements).filter(
+        (element) => element.tabIndex >= 0 && element.getClientRects().length > 0
+      );
+      if (visibleFocusableElements.length === 0) {
+        event.preventDefault();
+        modalRef.current.focus();
+        return;
+      }
+
+      const firstElement = visibleFocusableElements[0];
+      const lastElement = visibleFocusableElements[visibleFocusableElements.length - 1];
+      if (!modalRef.current.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? lastElement : firstElement).focus();
+        return;
+      }
 
       if (event.shiftKey) {
         // Shift + Tab
@@ -157,6 +171,7 @@ export const Modal: React.FC<ModalProps> = ({
             'animate-in zoom-in-95 slide-in-from-bottom-4',
             sizes[size]
           )}
+          tabIndex={-1}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
