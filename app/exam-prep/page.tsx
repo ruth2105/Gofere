@@ -5,7 +5,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { BookOpen, Target, Video, FileText, ArrowRight } from 'lucide-react';
+import { BookOpen, ExternalLink, ArrowRight } from 'lucide-react';
 
 export default function ExamPrepPage() {
   const exams = [
@@ -14,53 +14,46 @@ export default function ExamPrepPage() {
       name: 'IELTS',
       fullName: 'International English Language Testing System',
       icon: '📚',
-      description: 'Prepare for IELTS Academic and General Training with comprehensive materials and practice tests.',
+      description: 'Review IELTS formats and use the preparation checklist and official provider resources.',
       features: [
-        'Full-length practice tests',
-        'Section-wise practice (Listening, Reading, Writing, Speaking)',
-        'Band score prediction',
-        'Expert tips and strategies',
-        'Speaking practice sessions'
-      ],
-      acceptedBy: 'UK, Australia, Canada, and 140+ countries'
+        'Overview of Listening, Reading, Writing, and Speaking',
+        'Preparation checklist',
+        'Link to official IELTS preparation material',
+        'Reminder to confirm the required test format and score with each institution'
+      ]
     },
     {
       id: 'toefl',
       name: 'TOEFL',
       fullName: 'Test of English as a Foreign Language',
       icon: '🎯',
-      description: 'Master TOEFL iBT with practice materials covering all four sections of the exam.',
+      description: 'Review TOEFL iBT preparation guidance and use the official ETS resources.',
       features: [
-        'Complete mock tests',
-        'Reading and listening comprehension',
-        'Integrated and independent writing tasks',
-        'Speaking response practice',
-        'Note-taking strategies'
-      ],
-      acceptedBy: 'USA, Canada, and 150+ countries'
+        'Overview of TOEFL iBT sections',
+        'Timed preparation checklist',
+        'Link to official ETS preparation material',
+        'Reminder to confirm requirements with each institution'
+      ]
     },
     {
       id: 'duolingo',
       name: 'Duolingo English Test',
       fullName: 'Duolingo English Test',
       icon: '🦉',
-      description: 'Get ready for the adaptive Duolingo English Test with our practice resources.',
+      description: 'Learn about the Duolingo English Test and review official test preparation guidance.',
       features: [
-        'Adaptive practice tests',
-        'All question types covered',
-        'Video interview preparation',
-        'Quick results in 48 hours',
-        'Affordable test option'
-      ],
-      acceptedBy: 'Growing acceptance worldwide including USA, UK, Canada'
+        'Overview of test preparation steps',
+        'Reminder to check test rules and technical requirements',
+        'Link to official Duolingo English Test preparation material',
+        'Reminder to confirm acceptance with each institution'
+      ]
     }
   ];
 
-  const resources = [
-    { icon: Video, title: 'Video Lessons', description: 'Expert-led video tutorials' },
-    { icon: FileText, title: 'Practice Tests', description: 'Full-length mock exams' },
-    { icon: BookOpen, title: 'Study Guides', description: 'Comprehensive PDF guides' },
-    { icon: Target, title: 'Tips & Strategies', description: 'Score improvement techniques' }
+  const officialResources = [
+    { title: 'IELTS', url: 'https://ielts.org/take-a-test/preparation-resources' },
+    { title: 'TOEFL iBT', url: 'https://www.ets.org/toefl/test-takers/ibt/prepare.html' },
+    { title: 'Duolingo English Test', url: 'https://englishtest.duolingo.com/prepare' },
   ];
 
   return (
@@ -71,9 +64,9 @@ export default function ExamPrepPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <BookOpen className="mx-auto mb-4 text-accent-teal" size={48} />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">English Proficiency Exam Preparation</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">English Exam Preparation Guides</h1>
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-              Ace your IELTS, TOEFL, or Duolingo English Test with our comprehensive preparation resources
+              Review practical checklists and continue to official test-provider preparation resources.
             </p>
           </div>
         </div>
@@ -106,7 +99,7 @@ export default function ExamPrepPage() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">What&apos;s Included:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">This guide covers:</h4>
                       <ul className="space-y-1">
                         {exam.features.map((feature, idx) => (
                           <li key={idx} className="text-sm text-gray-700 flex items-start">
@@ -117,11 +110,13 @@ export default function ExamPrepPage() {
                       </ul>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Accepted By:</h4>
-                      <p className="text-sm text-gray-700">{exam.acceptedBy}</p>
+                      <h4 className="font-semibold text-gray-900 mb-2">Important:</h4>
+                      <p className="text-sm text-gray-700">
+                        Test acceptance and required scores vary by institution. Check directly with your target institution.
+                      </p>
                       <Link href={`/exam-prep/${exam.id}`} className="mt-4 block">
                         <Button variant="primary" className="w-full">
-                          Start Preparing <ArrowRight size={16} className="ml-2" />
+                          View Preparation Guide <ArrowRight size={16} className="ml-2" />
                         </Button>
                       </Link>
                     </div>
@@ -136,25 +131,28 @@ export default function ExamPrepPage() {
       <section className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Study Resources</h2>
-            <p className="text-lg text-gray-600">Everything you need to succeed</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Official Test-Provider Resources</h2>
+            <p className="text-lg text-gray-600">
+              Test providers maintain the authoritative guidance and current practice materials.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {resources.map((resource, idx) => {
-              const Icon = resource.icon;
-              return (
-                <Card key={idx} className="text-center">
-                  <CardContent className="pt-6">
-                    <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon className="text-primary-600" size={32} />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">{resource.title}</h3>
-                    <p className="text-sm text-gray-600">{resource.description}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
+            {officialResources.map((resource) => (
+              <a
+                key={resource.title}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl bg-white p-6 text-center shadow-sm hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700"
+              >
+                <BookOpen className="mx-auto mb-4 text-primary-600" size={32} aria-hidden="true" />
+                <span className="font-semibold text-gray-900">{resource.title}</span>
+                <span className="mt-2 flex items-center justify-center gap-2 text-sm text-primary-700">
+                  Official preparation resources <ExternalLink size={14} aria-hidden="true" />
+                </span>
+              </a>
+            ))}
           </div>
         </div>
       </section>

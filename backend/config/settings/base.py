@@ -159,7 +159,7 @@ SIMPLE_JWT = {
 # DRF Spectacular (OpenAPI documentation)
 SPECTACULAR_SETTINGS = {
     'TITLE': 'GOFER EXAM API',
-    'DESCRIPTION': 'Production-grade REST API for GOFER EXAM platform - student study abroad consulting and scholarship discovery',
+    'DESCRIPTION': 'REST API foundation for GOFER EXAM study-abroad information and consultancy services',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SCHEMA_PATH_PREFIX': '/api/v1/',

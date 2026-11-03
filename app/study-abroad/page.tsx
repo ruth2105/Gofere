@@ -4,7 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Globe, MapPin, DollarSign, GraduationCap, ArrowRight } from 'lucide-react';
+import { Globe, MapPin, DollarSign, ArrowRight } from 'lucide-react';
 import { destinations } from '@/data/destinations';
 
 export default function StudyAbroadPage() {
@@ -26,6 +26,11 @@ export default function StudyAbroadPage() {
 
       <section className="flex-1 py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            This page uses local demonstration data. Tuition estimates, institution counts, and
+            destination details are not independently verified; confirm current information with
+            official sources.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {destinations.map((destination) => (
               <Card key={destination.id} hover>

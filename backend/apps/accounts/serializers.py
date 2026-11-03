@@ -70,6 +70,12 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Must include "email" and "password".')
 
 
+class UserLogoutSerializer(serializers.Serializer):
+    """Request body for blacklisting a refresh token."""
+
+    refresh = serializers.CharField(write_only=True)
+
+
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for User model."""
     

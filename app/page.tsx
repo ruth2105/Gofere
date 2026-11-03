@@ -1,17 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { 
   GraduationCap, 
   Award, 
   BookOpen, 
-  Plane, 
   Users,
   Globe,
   ArrowRight,
@@ -25,15 +24,21 @@ import { formatDate, calculateDaysUntil } from '@/lib/utils';
 import { getScholarships } from '@/lib/api/scholarships';
 import { Scholarship } from '@/types';
 
+const subscribeToNothing = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
   const [featuredScholarships, setFeaturedScholarships] = useState<Scholarship[]>([]);
   const [scholarshipsLoading, setScholarshipsLoading] = useState(true);
   const [scholarshipsError, setScholarshipsError] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeToNothing,
+    getClientSnapshot,
+    getServerSnapshot
+  );
   
   useEffect(() => {
-    setMounted(true);
-
     let active = true;
     getScholarships()
       .then((items) => {
@@ -246,7 +251,7 @@ export default function HomePage() {
               English Proficiency Test Preparation
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              Most universities require IELTS, TOEFL, or Duolingo English Test scores. We provide practice materials to help you prepare.
+              Review preparation guidance and use official provider resources. This site does not currently offer interactive practice tests or score predictions.
             </p>
           </div>
           
@@ -262,15 +267,15 @@ export default function HomePage() {
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Practice tests for all four skills
+                      Overview of all four test skills
                     </li>
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Band score calculator
+                      Preparation checklist
                     </li>
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Writing task samples
+                      Official preparation resources
                     </li>
                   </ul>
                 </CardContent>
@@ -292,11 +297,11 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Score interpretation guide
+                      Preparation checklist
                     </li>
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Timed practice sections
+                      Official preparation resources
                     </li>
                   </ul>
                 </CardContent>
@@ -322,7 +327,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-start">
                       <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                      Sample test experience
+                      Official preparation resources
                     </li>
                   </ul>
                 </CardContent>
@@ -341,6 +346,9 @@ export default function HomePage() {
             </h2>
             <p className="text-gray-600">
               Compare popular destinations for international students
+            </p>
+            <p className="mt-2 text-sm text-amber-800">
+              Destination details shown here use demonstration data; verify current facts with official sources.
             </p>
           </div>
           

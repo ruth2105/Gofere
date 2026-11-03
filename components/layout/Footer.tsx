@@ -1,16 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import React from 'react';
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { GraduationCap, Mail, Phone, MapPin, Send } from 'lucide-react';
 
+const subscribeToNothing = () => () => {};
+const getCurrentYear = () => new Date().getFullYear();
+const getServerYear = () => 2026;
+
 export const Footer: React.FC = () => {
-  const [currentYear, setCurrentYear] = useState(2026);
-  
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = useSyncExternalStore(
+    subscribeToNothing,
+    getCurrentYear,
+    getServerYear
+  );
 
   return (
     <footer className="bg-primary-900 text-white">
@@ -121,6 +125,14 @@ export const Footer: React.FC = () => {
                   className="text-gray-300 hover:text-white transition-colors text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-teal rounded"
                 >
                   About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/faq"
+                  className="text-gray-300 hover:text-white transition-colors text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-teal rounded"
+                >
+                  FAQ
                 </Link>
               </li>
             </ul>

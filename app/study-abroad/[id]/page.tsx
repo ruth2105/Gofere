@@ -66,6 +66,10 @@ export default async function DestinationDetailPage({
 
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            This guide uses local demonstration data. Verify current tuition, visa rules, and
+            institution details with official sources.
+          </p>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-8">
               <Card>

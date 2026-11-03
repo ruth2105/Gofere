@@ -4,14 +4,24 @@ Production settings for GOFER EXAM project.
 
 from .base import *
 from decouple import config
+from django.core.exceptions import ImproperlyConfigured
 import environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+if (
+    SECRET_KEY.startswith('django-insecure-')
+    or len(SECRET_KEY) < 50
+    or len(set(SECRET_KEY)) < 5
+):
+    raise ImproperlyConfigured('Set a strong SECRET_KEY of at least 50 characters in production.')
+
 ALLOWED_HOSTS = [
     host for host in config('ALLOWED_HOSTS', default='').split(',') if host
 ]
+if not ALLOWED_HOSTS:
+    raise ImproperlyConfigured('Set ALLOWED_HOSTS in production.')
 
 # Database
 DATABASES = {'default': environ.Env().db_url('DATABASE_URL')}

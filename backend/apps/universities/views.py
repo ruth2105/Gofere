@@ -38,6 +38,11 @@ class UniversityViewSet(viewsets.ReadOnlyModelViewSet):
             return UniversityDetailSerializer
         return UniversityListSerializer
     
+    @extend_schema(
+        tags=['Universities'],
+        summary='Get university details',
+        description='Retrieve detailed information about a specific university.',
+    )
     def retrieve(self, request, *args, **kwargs):
         """Increment view count when university is viewed."""
         instance = self.get_object()
@@ -52,11 +57,3 @@ class UniversityViewSet(viewsets.ReadOnlyModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
-    @extend_schema(
-        tags=['Universities'],
-        summary='Get university details',
-        description='Retrieve detailed information about a specific university.',
-    )
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)

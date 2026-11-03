@@ -3,12 +3,12 @@ Views for Scholarship model.
 """
 
 from rest_framework import viewsets, filters, permissions
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from .models import Scholarship
 from .serializers import ScholarshipListSerializer, ScholarshipDetailSerializer
-from apps.common.permissions import IsAdminOrReadOnly
 
 
 class ScholarshipViewSet(viewsets.ReadOnlyModelViewSet):
@@ -24,7 +24,7 @@ class ScholarshipViewSet(viewsets.ReadOnlyModelViewSet):
     - search: Search in name, provider, description
     """
     
-    queryset = Scholarship.objects.all()
+    queryset = Scholarship.objects.filter(is_published=True)
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['country', 'type', 'level', 'status', 'is_featured']
@@ -38,6 +38,11 @@ class ScholarshipViewSet(viewsets.ReadOnlyModelViewSet):
             return ScholarshipDetailSerializer
         return ScholarshipListSerializer
     
+    @extend_schema(
+        tags=['Scholarships'],
+        summary='Get scholarship details',
+        description='Retrieve detailed information about a specific published scholarship.',
+    )
     def retrieve(self, request, *args, **kwargs):
         """Increment view count when scholarship is viewed."""
         instance = self.get_object()
@@ -61,14 +66,3 @@ class ScholarshipViewSet(viewsets.ReadOnlyModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
-    @extend_schema(
-        tags=['Scholarships'],
-        summary='Get scholarship details',
-        description='Retrieve detailed information about a specific scholarship.',
-    )
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)
-
-
-from rest_framework.response import Response

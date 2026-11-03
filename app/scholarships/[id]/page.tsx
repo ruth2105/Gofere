@@ -11,5 +11,5 @@ export default async function ScholarshipDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <ScholarshipDetail id={id} />;
+  return <ScholarshipDetail key={id} id={id} />;
 }

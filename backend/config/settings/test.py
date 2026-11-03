@@ -20,15 +20,5 @@ PASSWORD_HASHERS = [
 # Email backend for testing
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
-# Disable migrations for tests (speeds up test runs)
-class DisableMigrations:
-    def __contains__(self, item):
-        return True
-    
-    def __getitem__(self, item):
-        return None
-
-MIGRATION_MODULES = DisableMigrations()
-
 # Reduce logging noise during tests
 LOGGING['root']['level'] = 'ERROR'

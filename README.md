@@ -7,28 +7,26 @@
 
 **Learn. Prepare. Apply. Achieve.**
 
-A comprehensive educational consultancy platform that helps students discover scholarships, prepare for English proficiency exams (IELTS, TOEFL, Duolingo), apply to universities worldwide, and receive expert visa guidance.
+A study-abroad information and consultancy website with a Next.js frontend and a Django REST API. Some public pages use local demonstration content; scholarship listings are read from the API.
 
 ## 🌟 Features
 
-### Core Functionality
-- **📚 Scholarship Discovery**: Browse 20+ fully-funded and partial scholarships from around the world
-- **🌍 Study Abroad Destinations**: Explore 10 top study destinations with detailed country information
-- **📝 Exam Preparation**: Complete preparation modules for IELTS, TOEFL, and Duolingo English Test
-- **🎓 University Database**: Access information about 12+ top universities worldwide
-- **🏆 Services Showcase**: 8 comprehensive services including counseling, applications, and visa guidance
+### Current Functionality
+- **📚 Scholarship Discovery**: API-backed catalogue with search, filters, and loading/error/empty states. The deployed catalogue is currently empty.
+- **🌍 Study Abroad Destinations**: Destination guide pages currently use local demonstration content.
+- **📝 Exam Preparation**: Informational preparation pages for IELTS, TOEFL, and the Duolingo English Test; these are not practice-test products.
+- **🏆 Services Showcase**: Public service information, with provider/referral distinctions.
 
 ### Interactive Features
-- Advanced scholarship filtering (by country, type, level, deadline)
-- Study destination comparison
-- Exam prep resources and practice materials
-- Student testimonials and success stories
-- Responsive design for all devices
+- Scholarship search and filtering by country, type, and level
+- Study destination detail pages
+- Public navigation and service/contact information
+- Responsive layouts (manual device/accessibility sign-off is still required)
 
-### User Dashboards (Structure Created)
-- **Student Portal**: Manage applications, documents, exam prep, and consultations
-- **Consultant Dashboard**: Manage assigned students and applications
-- **Admin Panel**: Full CRUD operations and analytics
+### Account and administration status
+- Student login and registration pages are present, but the frontend is not yet connected to backend authentication.
+- Django Admin provides scholarship management, including draft/publish and unpublish controls.
+- Student/consultant dashboards, application tracking, document uploads, and analytics are not complete user workflows.
 
 ## 🛠 Tech Stack
 
@@ -124,21 +122,12 @@ data.
 ## 📄 Available Pages
 
 ### Public Pages
-- ✅ **Homepage** (`/`) - Hero, services, scholarships, destinations, testimonials
-- ✅ **Scholarships** (`/scholarships`) - Searchable scholarship database with filters
-- ✅ **Scholarship Details** (`/scholarships/[id]`) - Individual scholarship information
-- ✅ **Study Abroad** (`/study-abroad`) - Study destination listing
-- ✅ **Destination Details** (`/study-abroad/[id]`) - Country-specific information
-- ✅ **Exam Preparation** (`/exam-prep`) - IELTS, TOEFL, Duolingo prep hub
-
-### Pages to Extend
-- Services page (`/services`)
-- Individual exam prep pages (`/exam-prep/ielts`, `/exam-prep/toefl`, `/exam-prep/duolingo`)
-- About page (`/about`)
-- Contact page (`/contact`)
-- Student portal (`/student/*`)
-- Consultant dashboard (`/consultant/*`)
-- Admin dashboard (`/admin/*`)
+- Homepage (`/`)
+- Scholarship catalogue and detail (`/scholarships`, `/scholarships/[id]`); real detail pages require a published API record.
+- Study destinations (`/study-abroad`, `/study-abroad/[id]`); currently demonstration content.
+- Exam preparation hub and information pages (`/exam-prep`, `/exam-prep/ielts`, `/exam-prep/toefl`, `/exam-prep/duolingo`)
+- About, services, contact, FAQ, privacy, terms, and disclaimer pages.
+- Student login, registration, and password-assistance information pages; authentication and password reset are not integrated in the frontend.
 
 ## 🎨 Design System
 
@@ -168,33 +157,14 @@ All UI components follow consistent patterns:
 
 ## 📊 Data
 
-### Scholarships (22 total)
-- Featured scholarships: Fulbright, Chevening, DAAD, Australia Awards, Rhodes, Gates Cambridge
-- Coverage: Full and partial scholarships
-- Countries: USA, UK, Canada, Australia, Germany, and more
-- Levels: Undergraduate, Graduate, PhD
-
-### Universities (12 total)
-- Top-ranked institutions from USA, UK, Canada, Australia, Germany, Singapore
-- Includes tuition ranges, acceptance rates, and program information
-
-### Destinations (10 total)
-- Comprehensive country guides with visa information
-- Living costs, tuition ranges, and intake seasons
-- Popular cities and study reasons
-
-### Services (8 total)
-- 7 services provided by Gofer Exam
-- 1 referral service (Education Loans)
+### Catalogue data
+- Scholarship, university, and destination API endpoints are available, but all three deployed catalogues currently contain zero records.
+- Local destination/service fixtures remain demo content; do not treat them as verified current opportunities or partnerships.
 
 ## 🔐 Important Notes
 
 ### Disclaimer
-This is a demo platform with realistic but **fictional data**:
-- All student names, consultant names, and testimonials are fictional
-- Success rates and statistics are for demonstration purposes
-- Real scholarship data is sourced from official providers but should be verified
-- No real partnerships or affiliations are claimed
+Some repository fixture files contain fictional sample data and are not the live scholarship source. Scholarship records must be verified against official providers and published by an administrator before they appear publicly. The privacy and terms pages are preliminary notices and require legal review before production use.
 
 ### Ethical Considerations
 - **No guaranteed outcomes**: The platform clearly states it cannot guarantee admission, scholarships, or visas
@@ -203,21 +173,22 @@ This is a demo platform with realistic but **fictional data**:
 
 ## 🔜 Future Enhancements
 
-### Phase 1 (Foundation Complete ✅)
-- [x] Homepage with all sections
-- [x] Scholarship discovery and filtering
-- [x] Study abroad destination guides
-- [x] Exam preparation hub
-- [x] Responsive design
-- [x] Navigation and footer
+### Phase 1 (Partially complete; sign-off pending)
+- [x] Public information pages and navigation routes
+- [x] API-backed scholarship listing with search and filters
+- [ ] Manual responsive, accessibility, and cross-browser sign-off
+- [ ] Legal review of privacy and terms notices
+- [ ] Verified real catalogue data
 
-### Phase 2 (To Implement)
-- [ ] Individual exam prep modules (IELTS, TOEFL, Duolingo)
-- [ ] Practice test functionality
-- [ ] Student authentication and registration
-- [ ] Student portal with dashboard
-- [ ] Application tracking system
-- [ ] Document upload functionality
+### Phase 2 (In progress; not signed off)
+- [x] Django/PostgreSQL deployment and public scholarship, university, and destination catalogue APIs
+- [x] Django Admin scholarship draft/publish controls
+- [x] Registration, login, refresh, logout, and current-user backend endpoints
+- [ ] Connect frontend authentication securely to the backend
+- [ ] Connect universities, destinations, and services pages to maintained API data
+- [ ] Implement and test application, consultation, document, and notification API workflows
+- [ ] Confirm deployed database backup and retention plan
+- [ ] Verify a real admin-created published scholarship through listing and detail in production
 
 ### Phase 3 (Advanced)
 - [ ] Consultant dashboard
@@ -241,14 +212,12 @@ Connect with students through the existing Telegram bot:
 
 ## 🤝 Contributing
 
-This is a demonstration platform. For production use:
-1. Replace demo data with real data sources
-2. Implement authentication and authorization
-3. Add database integration
-4. Set up API endpoints
-5. Implement payment processing
-6. Add comprehensive error handling
-7. Set up monitoring and analytics
+Before production use:
+1. Verify and curate catalogue content using official sources
+2. Complete secure frontend authentication and authorization
+3. Implement and test required student/consultant workflows
+4. Review privacy, terms, file handling, and data retention
+5. Configure backups, monitoring, and persistent hosting
 
 ## 📜 License
 

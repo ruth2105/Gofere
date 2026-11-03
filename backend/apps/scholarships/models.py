@@ -114,6 +114,10 @@ class Scholarship(models.Model):
         choices=STATUS_CHOICES,
         default='OPEN'
     )
+    is_published = models.BooleanField(
+        default=False,
+        help_text='Only published scholarships are visible through the public API.'
+    )
     is_featured = models.BooleanField(default=False)
     is_popular = models.BooleanField(default=False)
     
@@ -168,6 +172,10 @@ class Scholarship(models.Model):
                 slug = f"{base_slug}-{counter}"
                 counter += 1
             self.slug = slug
+
+        if self.is_published and not self.published_at:
+            from django.utils import timezone
+            self.published_at = timezone.now()
         
         super().save(*args, **kwargs)
     

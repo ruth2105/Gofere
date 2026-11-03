@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
@@ -14,8 +14,11 @@ import { getScholarships } from '@/lib/api/scholarships';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
 import { Scholarship } from '@/types';
 
+const subscribeToNothing = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export default function ScholarshipsPage() {
-  const [mounted, setMounted] = useState(false);
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -24,13 +27,14 @@ export default function ScholarshipsPage() {
   const [countryFilter, setCountryFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [levelFilter, setLevelFilter] = useState('all');
+  const mounted = useSyncExternalStore(
+    subscribeToNothing,
+    getClientSnapshot,
+    getServerSnapshot
+  );
 
   useEffect(() => {
-    setMounted(true);
-
     let active = true;
-    setLoading(true);
-    setLoadError(false);
     getScholarships()
       .then((items) => {
         if (active) setScholarships(items);
@@ -127,7 +131,14 @@ export default function ScholarshipsPage() {
             <div className="text-center py-12" role="alert">
               <h3 className="text-xl font-semibold text-gray-700 mb-2">Scholarships could not be loaded</h3>
               <p className="text-gray-600 mb-4">Please check your connection and try again.</p>
-              <Button variant="primary" onClick={() => setRetryCount((count) => count + 1)}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  setLoading(true);
+                  setLoadError(false);
+                  setRetryCount((count) => count + 1);
+                }}
+              >
                 Try Again
               </Button>
             </div>
@@ -233,7 +244,7 @@ export default function ScholarshipsPage() {
           </p>
           <Link href="/contact">
             <Button variant="secondary" size="lg">
-              Book a Consultation
+              Contact Us About a Consultation
             </Button>
           </Link>
         </div>

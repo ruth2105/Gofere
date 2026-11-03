@@ -30,6 +30,11 @@ class DestinationViewSet(viewsets.ReadOnlyModelViewSet):
             return DestinationDetailSerializer
         return DestinationListSerializer
     
+    @extend_schema(
+        tags=['Destinations'],
+        summary='Get destination details',
+        description='Retrieve detailed information about a study destination.',
+    )
     def retrieve(self, request, *args, **kwargs):
         """Increment view count when destination is viewed."""
         instance = self.get_object()
@@ -44,11 +49,3 @@ class DestinationViewSet(viewsets.ReadOnlyModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-    
-    @extend_schema(
-        tags=['Destinations'],
-        summary='Get destination details',
-        description='Retrieve detailed information about a study destination.',
-    )
-    def retrieve(self, request, *args, **kwargs):
-        return super().retrieve(request, *args, **kwargs)

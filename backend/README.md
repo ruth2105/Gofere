@@ -1,6 +1,6 @@
 # GOFER EXAM Backend API
 
-Production-grade Django REST API backend for the GOFER EXAM platform - student study abroad consulting and scholarship discovery.
+Django REST API foundation for the GOFER EXAM platform. Several business models exist, but only the authentication and public catalogue endpoints listed below are currently exposed.
 
 ## Technology Stack
 
@@ -167,49 +167,24 @@ Once the server is running, access interactive API documentation:
 - `POST /api/v1/auth/logout/` - User logout (blacklist token)
 
 ### User Management
-- `GET /api/v1/users/me/` - Get current user profile
-- `PATCH /api/v1/users/me/` - Update current user profile
-
-### Students
-- `GET /api/v1/students/me/` - Get student profile
-- `PATCH /api/v1/students/me/` - Update student profile
-
-### Consultants
-- `GET /api/v1/consultants/` - List consultants
-- `GET /api/v1/consultants/{id}/` - Get consultant details
+- `GET /api/v1/auth/me/` - Get current user profile
+- `PATCH /api/v1/auth/me/` - Update current user profile
 
 ### Scholarships
-- `GET /api/v1/scholarships/` - List scholarships (with filters)
-- `GET /api/v1/scholarships/{id}/` - Get scholarship details
-- Filters: `country`, `type`, `level`, `field`, `search`, `featured`
+- `GET /api/v1/scholarships/` - List published scholarships (with filters)
+- `GET /api/v1/scholarships/{slug}/` - Get a published scholarship
+- Filters: `country`, `type`, `level`, `status`, `is_featured`, `search`, `ordering`
+- Scholarship records are drafts by default. Publish them through Django Admin before they are visible through the public API.
 
 ### Universities
 - `GET /api/v1/universities/` - List universities
-- `GET /api/v1/universities/{id}/` - Get university details
+- `GET /api/v1/universities/{slug}/` - Get university details
 
 ### Destinations
 - `GET /api/v1/destinations/` - List study destinations
-- `GET /api/v1/destinations/{id}/` - Get destination details
+- `GET /api/v1/destinations/{slug}/` - Get destination details
 
-### Services
-- `GET /api/v1/services/` - List consultant services
-- `GET /api/v1/services/{id}/` - Get service details
-
-### Applications
-- `GET /api/v1/applications/` - List user's applications
-- `POST /api/v1/applications/` - Create application
-- `GET /api/v1/applications/{id}/` - Get application details
-- `PATCH /api/v1/applications/{id}/` - Update application
-
-### Consultations
-- `GET /api/v1/consultations/` - List user's consultations
-- `POST /api/v1/consultations/` - Book consultation
-- `GET /api/v1/consultations/{id}/` - Get consultation details
-
-### Documents
-- `GET /api/v1/documents/` - List user's documents
-- `POST /api/v1/documents/` - Upload document
-- `GET /api/v1/documents/{id}/` - Download document
+Services, applications, consultations, documents, notifications, and consultant/student profile models are not currently exposed as API routes.
 
 ## Authentication
 

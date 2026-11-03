@@ -16,7 +16,7 @@ export default function StudentPage() {
             <UserCircle className="mx-auto mb-4 text-primary-600" size={64} />
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Student Portal</h1>
             <p className="text-lg text-gray-600">
-              Access your account to manage applications, track scholarships, and prepare for exams
+              Student sign-in and registration screens are available, but account features are not yet connected to the backend.
             </p>
           </div>
 
@@ -26,7 +26,7 @@ export default function StudentPage() {
                 <LogIn className="mx-auto mb-3 text-primary-600" size={48} />
                 <CardTitle>Sign In</CardTitle>
                 <CardDescription>
-                  Already have an account? Sign in to access your dashboard
+                  The sign-in screen is available, but authentication is not yet connected.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -43,7 +43,7 @@ export default function StudentPage() {
                 <UserPlus className="mx-auto mb-3 text-primary-600" size={48} />
                 <CardTitle>Create Account</CardTitle>
                 <CardDescription>
-                  New to Gofer Exam? Create a free account to get started
+                  The registration form is available as a preview; it does not yet create an account.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -58,8 +58,11 @@ export default function StudentPage() {
 
           <div className="mt-12 bg-white rounded-xl p-8 shadow-md">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 text-center">
-              What You Can Do With Your Account
+              Planned Account Features
             </h2>
+            <p className="text-center text-sm text-amber-800">
+              These workflows are not currently available in the student portal.
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">📚 Manage Applications</h3>

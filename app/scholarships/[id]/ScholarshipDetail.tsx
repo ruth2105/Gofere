@@ -31,9 +31,6 @@ export default function ScholarshipDetail({ id }: { id: string }) {
 
   useEffect(() => {
     let active = true;
-    setLoading(true);
-    setLoadError(false);
-    setNotFound(false);
     getScholarship(id)
       .then((item) => {
         if (active) setScholarship(item);
@@ -75,7 +72,15 @@ export default function ScholarshipDetail({ id }: { id: string }) {
           <div className="text-center" role="alert">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Scholarship details could not be loaded</h1>
             <p className="text-gray-600 mb-4">Please check your connection and try again.</p>
-            <Button variant="primary" onClick={() => setRetryCount((count) => count + 1)}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setLoading(true);
+                setLoadError(false);
+                setNotFound(false);
+                setRetryCount((count) => count + 1);
+              }}
+            >
               Try Again
             </Button>
           </div>
@@ -295,7 +300,7 @@ export default function ScholarshipDetail({ id }: { id: string }) {
                     </ul>
                     <Link href="/contact" className="block mt-4">
                       <Button variant="primary" className="w-full" size="sm">
-                        Book Consultation
+                        Contact Us About This Scholarship
                       </Button>
                     </Link>
                   </CardContent>
