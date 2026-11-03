@@ -7,7 +7,7 @@
 
 **Learn. Prepare. Apply. Achieve.**
 
-A study-abroad information and consultancy website with a Next.js frontend and a Django REST API. Some public pages use local demonstration content; scholarship listings are read from the API.
+A study-abroad information and consultancy website with a Next.js frontend and a Django REST API. Public catalogues are API-backed; informational pages may still include clearly identified examples.
 
 ## 🌟 Features
 
@@ -16,12 +16,13 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 - **🌍 Study Abroad Destinations**: API-backed destination listings and detail pages with loading/error/empty states. The deployed catalogue is currently empty.
 - **🎓 University Directory**: API-backed university listings and detail pages with search and loading/error/empty states. The deployed catalogue is currently empty.
 - **📝 Exam Preparation**: Informational preparation pages for IELTS, TOEFL, and the Duolingo English Test; these are not practice-test products.
-- **🏆 Services Showcase**: Public service information, with provider/referral distinctions.
+- **🏆 Services Catalogue**: API-backed active service listings and detail pages. The live catalogue is currently empty.
 
 ### Interactive Features
 - Scholarship search and filtering by country, type, and level
 - Study destination detail pages
 - University directory search and detail pages
+- Service catalogue search and detail pages
 - Public navigation and service/contact information
 - Responsive layouts (manual device/accessibility sign-off is still required)
 
@@ -69,7 +70,6 @@ gofer-exam/
 │   ├── scholarships.ts         # 22 scholarships
 │   ├── universities.ts         # 12 universities
 │   ├── destinations.ts         # 10 study destinations
-│   ├── services.ts             # 8 services
 │   ├── students.ts             # Student data and applications
 │   ├── consultants.ts          # Consultant profiles
 │   ├── testimonials.ts         # 6 success stories
@@ -164,8 +164,8 @@ All UI components follow consistent patterns:
 ## 📊 Data
 
 ### Catalogue data
-- Scholarship, university, and destination API endpoints are available, but all three deployed catalogues currently contain zero records.
-- Local destination/service fixtures remain demo content; do not treat them as verified current opportunities or partnerships.
+- Scholarship, university, destination, and service API endpoints are available; the deployed catalogues currently contain zero records.
+- Legacy local destination examples are not used by the live destination catalogue and are not verified current opportunities or partnerships.
 
 ## 🔐 Important Notes
 
@@ -174,7 +174,7 @@ Some repository fixture files contain fictional sample data and are not the live
 
 ### Ethical Considerations
 - **No guaranteed outcomes**: The platform clearly states it cannot guarantee admission, scholarships, or visas
-- **Transparent services**: Services are clearly marked as provided by Gofer Exam or referral-based
+- **Transparent services**: Only active service entries maintained by Gofer Exam are shown in the public catalogue
 - **Educational purpose**: Exam prep materials are for practice only
 
 ## 🔜 Future Enhancements
@@ -192,8 +192,8 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] Registration, login, refresh, logout, and current-user backend endpoints
 - [x] Connect frontend registration/login/profile/logout using HttpOnly cookie sessions and CSRF protection
 - [x] Connect university and destination pages to API-backed data
+- [x] Expose active services through a read-only API and connect the service pages
 - [ ] Create and verify maintained university/destination records through Django Admin
-- [ ] Expose services through a maintained API and connect the services pages
 - [ ] Implement and test application, consultation, document, and notification API workflows
 - [ ] Confirm deployed database backup and retention plan
 - [ ] Verify a real admin-created published scholarship through listing and detail in production

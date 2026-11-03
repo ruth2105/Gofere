@@ -88,6 +88,21 @@ export interface DestinationApiRecord {
   embassy_website?: string;
 }
 
+export interface ServiceApiRecord {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  short_description: string;
+  category: string;
+  price: string;
+  currency: string;
+  duration: string;
+  features: string[];
+  is_featured: boolean;
+  image: string | null;
+}
+
 export interface UserApiRecord {
   id: string;
   email: string;
@@ -336,6 +351,29 @@ export const api = {
     get: async (slug: string) => {
       const response = await apiClient.get<DestinationApiRecord>(
         `/destinations/${slug}/`
+      );
+      return response.data;
+    },
+  },
+
+  services: {
+    list: async (params?: {
+      category?: string;
+      is_featured?: boolean;
+      search?: string;
+      ordering?: string;
+      page?: number;
+    }) => {
+      const response = await apiClient.get<PaginatedResponse<ServiceApiRecord>>(
+        '/services/',
+        { params }
+      );
+      return response.data;
+    },
+
+    get: async (slug: string) => {
+      const response = await apiClient.get<ServiceApiRecord>(
+        `/services/${slug}/`
       );
       return response.data;
     },

@@ -1,4 +1,10 @@
-import { api, DestinationApiRecord, PaginatedResponse, UniversityApiRecord } from './client';
+import {
+  api,
+  DestinationApiRecord,
+  PaginatedResponse,
+  ServiceApiRecord,
+  UniversityApiRecord,
+} from './client';
 
 async function getAllPages<T>(
   fetchPage: (page: number) => Promise<PaginatedResponse<T>>
@@ -30,4 +36,12 @@ export function getUniversities(country?: string): Promise<UniversityApiRecord[]
 
 export function getUniversity(slug: string): Promise<UniversityApiRecord> {
   return api.universities.get(slug);
+}
+
+export function getServices(): Promise<ServiceApiRecord[]> {
+  return getAllPages((page) => api.services.list({ page }));
+}
+
+export function getService(slug: string): Promise<ServiceApiRecord> {
+  return api.services.get(slug);
 }
