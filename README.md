@@ -182,6 +182,7 @@ Some repository fixture files contain fictional sample data and are not the live
 ### Phase 1 (Partially complete; sign-off pending)
 - [x] Public information pages and navigation routes
 - [x] API-backed scholarship listing with search and filters
+- [x] Original general-English practice quiz, deployed and verified; it is not an official test simulation
 - [ ] Manual responsive, accessibility, and cross-browser sign-off
 - [ ] Legal review of privacy and terms notices
 - [ ] Verified real catalogue data
@@ -193,10 +194,12 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] Connect frontend registration/login/profile/logout using HttpOnly cookie sessions and CSRF protection
 - [x] Connect university and destination pages to API-backed data
 - [x] Expose active services through a read-only API and connect the service pages
+- [x] Student-owned application tracker with tested draft, submit, and withdraw transitions
 - [ ] Create and verify maintained university/destination records through Django Admin
-- [ ] Implement and test application, consultation, document, and notification API workflows
+- [ ] Implement consultation, document, and notification workflows after confirming service policies and durable file-storage requirements
 - [ ] Confirm deployed database backup and retention plan
 - [ ] Verify a real admin-created published scholarship through listing and detail in production
+- [ ] Verify student workflows using an authorized production student account
 
 ### Phase 3 (Advanced)
 - [ ] Consultant dashboard

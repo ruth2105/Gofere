@@ -1,8 +1,8 @@
 # GOFER EXAM - Phase 2 Backend Implementation Progress
 
-**Date**: November 2, 2026  
-**Status**: Backend Foundation Complete ✅  
-**Next Step**: PostgreSQL Installation & Initial Migrations
+**Last reconciled**: November 3, 2026
+**Status**: Phase 2 is in progress; authentication, catalogue integration, and the student application tracker are deployed. Phase 2 has not been signed off.
+**Current source of truth**: [README.md](./README.md), under “Future Enhancements”
 
 ---
 
@@ -302,16 +302,13 @@ python manage.py runserver
 
 | Category | Status | Completion |
 |----------|--------|------------|
-| **Phase 1: Frontend** | Complete | 100% ✅ |
-| **Phase 2: Planning** | Complete | 100% ✅ |
-| **Phase 2: Backend Setup** | Complete | 100% ✅ |
-| **Phase 2: Models & Admin** | Complete | 100% ✅ |
-| **Phase 2: Database Setup** | Pending | 0% ⏳ |
-| **Phase 2: API Endpoints** | Not Started | 0% |
-| **Phase 2: Authentication** | Not Started | 0% |
-| **Phase 2: Frontend Integration** | Not Started | 0% |
-| **Phase 2: Testing** | Not Started | 0% |
-| **Overall Phase 2** | In Progress | 30% |
+| **Phase 1: Public website** | Implemented; final content, legal, and accessibility sign-off pending | In progress |
+| **Phase 2: Backend and catalogue APIs** | Deployed | Complete |
+| **Phase 2: Authentication** | Backend and cookie-based frontend integration deployed | Complete |
+| **Phase 2: Student applications** | Owner-scoped API and tracker deployed; API tests pass | Implemented; production account verification pending |
+| **Phase 2: Consultation, documents, notifications** | Not implemented | Pending policy and storage decisions |
+| **Phase 2: Production data and operations** | Verified catalogues and backup-retention confirmation pending | Pending |
+| **Overall Phase 2** | In progress; not signed off | In progress |
 
 ---
 
@@ -338,7 +335,7 @@ From original Phase 2 specification:
 17. ❌ README documentation complete
 18. ❌ Deployment ready configuration
 
-**Current Progress**: 1/18 criteria (README complete)
+The original success criteria above are a historical implementation plan and no longer represent current deployment status. See the current checklist in [README.md](./README.md) for verified work and remaining sign-off items.
 
 ---
 
