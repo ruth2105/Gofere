@@ -183,6 +183,7 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] Public information pages and navigation routes
 - [x] API-backed scholarship listing with search and filters
 - [x] Original general-English practice quiz, deployed and verified; it is not an official test simulation
+- [x] Keyboard skip link and reduced-motion preference support; broader accessibility sign-off is still pending
 - [ ] Manual responsive, accessibility, and cross-browser sign-off
 - [ ] Legal review of privacy and terms notices
 - [ ] Verified real catalogue data

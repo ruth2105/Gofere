@@ -46,6 +46,26 @@ export const Navigation: React.FC = () => {
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-40" aria-label="Main navigation">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-primary-900 focus:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200"
+        onClick={(event) => {
+          const target =
+            document.getElementById('main-content')
+            ?? document.querySelector<HTMLElement>('main')
+            ?? document.querySelector<HTMLElement>('h1');
+
+          if (!target) {
+            event.preventDefault();
+            return;
+          }
+
+          target.id = 'main-content';
+          target.tabIndex = -1;
+        }}
+      >
+        Skip to main content
+      </a>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -129,6 +149,7 @@ export const Navigation: React.FC = () => {
             {isOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
+
       </div>
 
       {/* Mobile Navigation */}
@@ -151,8 +172,8 @@ export const Navigation: React.FC = () => {
                 className={cn(
                   'block px-3 py-2 rounded-md text-base font-medium transition-all duration-200',
                   'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200',
-                  active 
-                    ? 'text-primary-700 bg-primary-50 font-semibold border-l-4 border-primary-600' 
+                  active
+                    ? 'text-primary-700 bg-primary-50 font-semibold border-l-4 border-primary-600'
                     : 'text-gray-700 hover:text-primary-600 hover:bg-primary-50/50 border-l-4 border-transparent'
                 )}
                 onClick={() => setIsOpen(false)}

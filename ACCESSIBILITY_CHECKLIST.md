@@ -114,7 +114,7 @@
 ### Tab Navigation
 - [x] Tab order follows visual order
 - [x] All interactive elements reachable
-- [x] Skip to main content (implicit via structure)
+- [x] Skip to main content link focuses the main landmark or page heading
 - [x] Focus indicators always visible
 - [x] No keyboard traps (except intentional Modal trap)
 
@@ -214,7 +214,7 @@
 - [x] Duration: 200-300ms
 - [x] Easing: ease-out for entrances
 - [x] Transform animations use GPU (translate, scale)
-- [x] Prefers-reduced-motion: not yet implemented ⚠️
+- [x] Respect `prefers-reduced-motion` by minimizing animation and transition durations
 
 ### Animations
 - [x] Spinner animation (rotate)
@@ -224,21 +224,20 @@
 
 ## 🔧 Recommendations for Future Enhancement
 
-1. **Prefers-Reduced-Motion**: Add `@media (prefers-reduced-motion: reduce)` support
-2. **Skip Links**: Add "Skip to main content" link for keyboard users
-3. **Live Region Announcer**: Add global aria-live region for dynamic notifications
-4. **Focus Management**: Add useAutoFocus hook for consistent focus patterns
-5. **High Contrast Mode**: Test and enhance for Windows High Contrast Mode
-6. **Dark Mode**: Implement dark theme with proper contrast ratios
-7. **Language Support**: Add lang attributes for internationalization
-8. **Form Validation**: Add real-time validation with debouncing
-9. **Keyboard Shortcuts**: Add common shortcuts (/, Esc, etc.)
-10. **Toast Notifications**: Create accessible toast/snackbar component
+1. **Live Region Announcer**: Add a global aria-live region for dynamic notifications if needed
+2. **Focus Management**: Add a useAutoFocus hook for consistent focus patterns
+3. **High Contrast Mode**: Test and enhance for Windows High Contrast Mode
+4. **Dark Mode**: Implement dark theme with proper contrast ratios
+5. **Language Support**: Add lang attributes for internationalized content
+6. **Form Validation**: Add real-time validation with debouncing where appropriate
+7. **Keyboard Shortcuts**: Add common shortcuts only where they do not conflict with browser behavior
+8. **Toast Notifications**: Create an accessible toast/snackbar component if needed
 
 ## 🧪 Testing Checklist
 
 ### Manual Testing
 - [ ] Tab through entire homepage - all elements reachable
+- [x] Use the skip link to move focus to page content
 - [ ] Test all buttons with keyboard (Enter/Space)
 - [ ] Test all forms with keyboard
 - [ ] Open and close modal with keyboard
@@ -272,7 +271,7 @@
 
 ## 📊 Current Status
 
-**Accessibility Score: 95/100**
+**Accessibility sign-off: pending.** This checklist records implementation checks; it is not a completed independent WCAG conformance audit.
 
 ✅ **Strengths:**
 - Comprehensive keyboard navigation
@@ -283,12 +282,11 @@
 - Interactive feedback on all elements
 - Screen reader support implemented
 
-⚠️ **Areas for Improvement:**
-- Add prefers-reduced-motion support
-- Add skip navigation links
-- Enhance with live region announcer
-- Test with actual screen readers
-- Add explicit lang attributes
+⚠️ **Remaining verification and improvements:**
+- Verify the skip link with keyboard navigation on representative routes
+- Test with actual screen readers and across supported browsers
+- Run automated accessibility scans and resolve confirmed findings
+- Review high-contrast mode and any localized content
 
 ## 🎯 Conclusion
 
@@ -302,4 +300,4 @@ The frontend components have been polished to a professional level with:
 - **Touch-friendly** target sizes (40px minimum)
 - **High contrast** text and interactive elements
 
-All major WCAG 2.1 Level AA criteria have been addressed in the component implementation. The site is ready for production with excellent accessibility foundations.
+Component-level accessibility support is present, but manual, assistive-technology, automated, and cross-browser checks remain before making a WCAG conformance claim.
