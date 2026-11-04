@@ -113,7 +113,7 @@ export default function PracticeTestPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="flex-1 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <Link
             href="/exam-prep"
@@ -127,7 +127,7 @@ export default function PracticeTestPage() {
             {complete ? (
               <>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Practice session complete</CardTitle>
+                  <CardTitle as="h1" className="text-2xl">Practice session complete</CardTitle>
                   <CardDescription>
                     You answered {score} of {questions.length} questions correctly.
                   </CardDescription>
@@ -149,7 +149,7 @@ export default function PracticeTestPage() {
                   <p className="text-sm font-medium text-primary-700" aria-live="polite">
                     Question {questionIndex + 1} of {questions.length}
                   </p>
-                  <CardTitle className="text-2xl">General English Practice</CardTitle>
+                  <CardTitle as="h1" className="text-2xl">General English Practice</CardTitle>
                   <CardDescription>
                     Original grammar, vocabulary, and reading questions. This is not an official
                     test or a provider-format simulation.

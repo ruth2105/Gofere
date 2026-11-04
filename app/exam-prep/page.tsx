@@ -59,6 +59,7 @@ export default function ExamPrepPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
+      <main id="main-content" tabIndex={-1}>
       
       <section className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -162,6 +163,7 @@ export default function ExamPrepPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

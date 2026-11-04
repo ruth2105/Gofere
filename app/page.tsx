@@ -7,6 +7,8 @@ import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { FeedbackState } from '@/components/ui/FeedbackState';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { 
   GraduationCap, 
   Award, 
@@ -80,66 +82,103 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navigation />
+      <main id="main-content" tabIndex={-1} className="flex-1">
       
-      {/* Hero Section - Authentic & Focused */}
-      <section className="relative bg-gradient-to-b from-primary-900 to-primary-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Find scholarships. Prepare for exams. <span className="text-blue-300">Study abroad.</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
-              We help students navigate university applications, discover funding opportunities, and prepare for English proficiency tests.
+      <section className="bg-brand-light">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-brand-gold/20 px-3 py-1.5 text-sm font-semibold text-primary-900">
+              <span className="h-2 w-2 rounded-full bg-brand-gold" aria-hidden="true" />
+              LEARN. PREPARE. APPLY. ACHIEVE.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight text-primary-900 md:text-5xl lg:text-6xl">
+              Your Next Opportunity Starts Here.
+            </h1>
+            <p className="mb-8 max-w-xl text-lg leading-relaxed text-gray-700 md:text-xl">
+              Prepare for your English exams, discover international opportunities, and get expert guidance for your study-abroad journey.
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/scholarships">
-                <Button size="lg" className="w-full sm:w-auto bg-white text-primary-900 hover:bg-white/90" leftIcon={<Award size={20} />}>
-                  Explore Scholarships
+                <Button size="lg" className="w-full sm:w-auto" leftIcon={<Award size={20} />}>
+                  Explore Opportunities
                 </Button>
               </Link>
               <Link href="/exam-prep">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto border-white text-white hover:bg-white/10" leftIcon={<BookOpen size={20} />}>
-                  Exam Preparation
+                <Button size="lg" variant="outline" className="w-full sm:w-auto" leftIcon={<BookOpen size={20} />}>
+                  Start Exam Preparation
                 </Button>
               </Link>
             </div>
-            
-            {/* Inline Trust Indicators */}
-            <div className="flex flex-wrap gap-6 text-sm text-gray-300">
-              <div className="flex items-center">
-                <Check size={16} className="mr-2 text-blue-300" />
-                Free scholarship search
-              </div>
-              <div className="flex items-center">
-                <Check size={16} className="mr-2 text-blue-300" />
-                IELTS, TOEFL & Duolingo prep
-              </div>
-              <div className="flex items-center">
-                <Check size={16} className="mr-2 text-blue-300" />
-                Expert consultation available
-              </div>
+          </div>
+
+          <div className="mx-auto w-full max-w-xl rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
+            <div className="mb-5 border-b border-gray-200 pb-5">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary-700">
+                Your journey
+              </p>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary-900">
+                A clearer path forward.
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                Bring preparation, opportunity discovery, and application guidance together in one place.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Link
+                href="/exam-prep"
+                className="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-brand-light focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/30"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-gold/20 text-sm font-bold text-primary-900">01</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold text-primary-900">Prepare with purpose</span>
+                  <span className="mt-0.5 block text-sm text-gray-600">IELTS, TOEFL, and Duolingo test guidance</span>
+                </span>
+                <ArrowRight size={18} className="shrink-0 text-primary-700 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/scholarships"
+                className="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-brand-light focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/30"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-gold/20 text-sm font-bold text-primary-900">02</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold text-primary-900">Discover opportunities</span>
+                  <span className="mt-0.5 block text-sm text-gray-600">Explore scholarships and study destinations</span>
+                </span>
+                <ArrowRight size={18} className="shrink-0 text-primary-700 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </Link>
+              <Link
+                href="/services"
+                className="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-brand-light focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/30"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-gold/20 text-sm font-bold text-primary-900">03</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold text-primary-900">Apply with guidance</span>
+                  <span className="mt-0.5 block text-sm text-gray-600">Find support for your application journey</span>
+                </span>
+                <ArrowRight size={18} className="shrink-0 text-primary-700 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* What We Do - Clear & Practical */}
-      <section className="py-16 bg-gray-50 border-t border-gray-200">
+      <section className="border-y border-gray-200 bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Award className="text-blue-600" size={24} />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-gold/20">
+                <Award className="text-primary-700" size={24} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Scholarship Search</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Discover fully-funded and partial scholarships matched to your profile across 50+ countries.
+                Discover fully funded and partial scholarship opportunities from destinations around the world.
               </p>
             </div>
             
             <div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <BookOpen className="text-blue-600" size={24} />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-gold/20">
+                <BookOpen className="text-primary-700" size={24} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Exam Preparation</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
@@ -148,8 +187,8 @@ export default function HomePage() {
             </div>
             
             <div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <GraduationCap className="text-blue-600" size={24} />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-gold/20">
+                <GraduationCap className="text-primary-700" size={24} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Published Services</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
@@ -158,8 +197,8 @@ export default function HomePage() {
             </div>
             
             <div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Users className="text-blue-600" size={24} />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-gold/20">
+                <Users className="text-primary-700" size={24} />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-2">Consultation Enquiries</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
@@ -174,14 +213,12 @@ export default function HomePage() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Scholarships Open Now
-              </h2>
-              <p className="text-gray-600">
-                Applications currently accepted — deadlines approaching
-              </p>
-            </div>
+            <SectionHeading
+              eyebrow="Scholarships"
+              title="Scholarships Open Now"
+              description="Explore current opportunities and keep application deadlines in view."
+              className="mb-0"
+            />
             <Link href="/scholarships" className="hidden md:block">
               <Button variant="outline" rightIcon={<ArrowRight size={16} />}>
                 View All
@@ -190,11 +227,22 @@ export default function HomePage() {
           </div>
           
           {scholarshipsError ? (
-            <p className="text-gray-600" role="alert">Featured scholarships could not be loaded. Please try the scholarship search later.</p>
+            <FeedbackState
+              variant="error"
+              title="Featured scholarships could not be loaded."
+              description="Please try the scholarship search later."
+            />
           ) : scholarshipsLoading ? (
-            <p className="text-gray-600" role="status">Loading current scholarship opportunities…</p>
+            <FeedbackState
+              variant="loading"
+              title="Loading scholarship opportunities"
+            />
           ) : featuredScholarships.length === 0 ? (
-            <p className="text-gray-600">There are no featured scholarship opportunities published right now.</p>
+            <FeedbackState
+              variant="empty"
+              title="No featured scholarships are published right now."
+              description="Browse all opportunities to see what is currently available."
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {featuredScholarships.map((scholarship) => {
@@ -202,7 +250,7 @@ export default function HomePage() {
               
               return (
                 <Link key={scholarship.id} href={`/scholarships/${scholarship.id}`}>
-                  <Card hover interactive className="h-full border-l-4 border-l-blue-500">
+                  <Card hover interactive className="h-full border-l-4 border-l-brand-gold">
                     <CardHeader>
                       <div className="flex items-start justify-between mb-3">
                         <div>
@@ -263,37 +311,34 @@ export default function HomePage() {
       </section>
 
       {/* Exam Preparation - Practical & Specific */}
-      <section className="py-16 bg-blue-50">
+      <section className="bg-brand-light py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              English Proficiency Test Preparation
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Review preparation guidance and use official provider resources. This site does not currently offer interactive practice tests or score predictions.
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="Exam preparation"
+            title="Choose Your English Exam Path"
+            description="Review preparation guidance and use official provider resources. This site does not currently offer interactive practice tests or score predictions."
+          />
           
           <div className="grid md:grid-cols-3 gap-6">
             <Link href="/exam-prep/ielts">
               <Card hover interactive className="h-full bg-white" as="article">
                 <CardHeader>
-                  <div className="text-4xl mb-3" aria-hidden="true">📚</div>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-primary-700">IELTS</p>
                   <CardTitle>IELTS Preparation</CardTitle>
                   <CardDescription>Academic & General Training modules</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Overview of all four test skills
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Preparation checklist
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Official preparation resources
                     </li>
                   </ul>
@@ -304,22 +349,22 @@ export default function HomePage() {
             <Link href="/exam-prep/toefl">
               <Card hover interactive className="h-full bg-white" as="article">
                 <CardHeader>
-                  <div className="text-4xl mb-3" aria-hidden="true">🎯</div>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-primary-700">TOEFL iBT</p>
                   <CardTitle>TOEFL iBT</CardTitle>
                   <CardDescription>Internet-based test format</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Reading, listening, speaking, writing
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Preparation checklist
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Official preparation resources
                     </li>
                   </ul>
@@ -330,22 +375,22 @@ export default function HomePage() {
             <Link href="/exam-prep/duolingo">
               <Card hover interactive className="h-full bg-white" as="article">
                 <CardHeader>
-                  <div className="text-4xl mb-3" aria-hidden="true">🦉</div>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-[0.14em] text-primary-700">Duolingo English Test</p>
                   <CardTitle>Duolingo English Test</CardTitle>
                   <CardDescription>Convenient online assessment</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Adaptive question formats
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Video interview prep
                     </li>
                     <li className="flex items-start">
-                      <Check size={16} className="text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                      <Check size={16} className="mr-2 mt-0.5 flex-shrink-0 text-brand-gold" />
                       Official preparation resources
                     </li>
                   </ul>
@@ -359,23 +404,25 @@ export default function HomePage() {
       {/* Study Destinations - Authentic Information */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              Where Students Choose to Study
-            </h2>
-            <p className="text-gray-600">
-              Compare popular destinations for international students
-            </p>
-          </div>
+          <SectionHeading
+            eyebrow="Study abroad"
+            title="Where Students Choose to Study"
+            description="Compare popular destinations for international students."
+          />
           
           {destinationsLoading ? (
-            <p className="text-gray-600" role="status">Loading destinations…</p>
+            <FeedbackState variant="loading" title="Loading study destinations" />
           ) : destinationsError ? (
-            <p className="text-gray-600" role="alert">
-              Destinations could not be loaded. Please try the destination directory later.
-            </p>
+            <FeedbackState
+              variant="error"
+              title="Destinations could not be loaded."
+              description="Please try the destination directory later."
+            />
           ) : destinations.length === 0 ? (
-            <p className="text-gray-600">No destinations have been published yet.</p>
+            <FeedbackState
+              variant="empty"
+              title="No destinations have been published yet."
+            />
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
             {destinations.map((destination) => (
@@ -429,20 +476,21 @@ export default function HomePage() {
       </section>
 
       {/* How It Works - Clear Student Journey */}
-      <section className="py-16 bg-gray-50 border-y border-gray-200">
+      <section className="border-y border-gray-200 bg-brand-light py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3 text-center">
-              Your Study Abroad Journey
-            </h2>
-            <p className="text-gray-600 mb-12 text-center">
-              A step-by-step path to studying abroad
-            </p>
+            <SectionHeading
+              eyebrow="The process"
+              title="Your Study Abroad Journey"
+              description="A step-by-step path to studying abroad."
+              centered
+              className="mb-12"
+            />
             
             <div className="space-y-8">
               <div className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-900 text-lg font-bold text-brand-gold">
                     1
                   </div>
                 </div>
@@ -456,7 +504,7 @@ export default function HomePage() {
               
               <div className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-900 text-lg font-bold text-brand-gold">
                     2
                   </div>
                 </div>
@@ -470,7 +518,7 @@ export default function HomePage() {
               
               <div className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-900 text-lg font-bold text-brand-gold">
                     3
                   </div>
                 </div>
@@ -484,7 +532,7 @@ export default function HomePage() {
               
               <div className="flex gap-6">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-900 text-lg font-bold text-brand-gold">
                     4
                   </div>
                 </div>
@@ -513,19 +561,19 @@ export default function HomePage() {
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
-                  <Check size={20} className="text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <Check size={20} className="mr-3 mt-0.5 flex-shrink-0 text-brand-gold" />
                   <span className="text-gray-700">One-on-one consultation sessions</span>
                 </li>
                 <li className="flex items-start">
-                  <Check size={20} className="text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <Check size={20} className="mr-3 mt-0.5 flex-shrink-0 text-brand-gold" />
                   <span className="text-gray-700">Application review and feedback</span>
                 </li>
                 <li className="flex items-start">
-                  <Check size={20} className="text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <Check size={20} className="mr-3 mt-0.5 flex-shrink-0 text-brand-gold" />
                   <span className="text-gray-700">Visa process guidance</span>
                 </li>
                 <li className="flex items-start">
-                  <Check size={20} className="text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <Check size={20} className="mr-3 mt-0.5 flex-shrink-0 text-brand-gold" />
                   <span className="text-gray-700">Document preparation support</span>
                 </li>
               </ul>
@@ -543,25 +591,25 @@ export default function HomePage() {
               </div>
             </div>
             
-            <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
+            <div className="rounded-lg border border-gray-200 bg-brand-light p-8">
               <h3 className="text-xl font-bold text-gray-900 mb-4">What to Expect</h3>
               <div className="space-y-4">
                 <div className="flex gap-4">
-                  <Clock className="text-blue-600 flex-shrink-0" size={24} />
+                  <Clock className="text-primary-700 flex-shrink-0" size={24} />
                   <div>
                     <p className="font-semibold text-gray-900 mb-1">Flexible Scheduling</p>
                     <p className="text-sm text-gray-600">Book sessions at times that work for your timezone</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <Users className="text-blue-600 flex-shrink-0" size={24} />
+                  <Users className="text-primary-700 flex-shrink-0" size={24} />
                   <div>
                     <p className="font-semibold text-gray-900 mb-1">Experienced Consultants</p>
                     <p className="text-sm text-gray-600">Work with advisors familiar with international admissions</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <Award className="text-blue-600 flex-shrink-0" size={24} />
+                  <Award className="text-primary-700 flex-shrink-0" size={24} />
                   <div>
                     <p className="font-semibold text-gray-900 mb-1">Clear Guidance</p>
                     <p className="text-sm text-gray-600">Get actionable advice for your specific situation</p>
@@ -574,14 +622,16 @@ export default function HomePage() {
       </section>
 
       {/* FAQ - Address Common Questions */}
-      <section className="py-16 bg-gray-50">
+      <section className="bg-brand-light py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            Frequently Asked Questions
-          </h2>
+          <SectionHeading
+            title="Frequently Asked Questions"
+            centered
+            className="mb-8"
+          />
           
           <div className="space-y-6">
-            <details className="bg-white rounded-lg border border-gray-200 p-6 group hover:border-primary-200 transition-colors focus-within:ring-4 focus-within:ring-primary-100">
+            <details className="group rounded-lg border border-gray-200 bg-white p-6 transition-colors hover:border-primary-200 focus-within:ring-4 focus-within:ring-brand-gold/25">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center focus:outline-none">
                 Is Gofer Exam free to use?
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
@@ -591,7 +641,7 @@ export default function HomePage() {
               </p>
             </details>
             
-            <details className="bg-white rounded-lg border border-gray-200 p-6 group hover:border-primary-200 transition-colors focus-within:ring-4 focus-within:ring-primary-100">
+            <details className="group rounded-lg border border-gray-200 bg-white p-6 transition-colors hover:border-primary-200 focus-within:ring-4 focus-within:ring-brand-gold/25">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center focus:outline-none">
                 Which countries can I study in?
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
@@ -601,7 +651,7 @@ export default function HomePage() {
               </p>
             </details>
             
-            <details className="bg-white rounded-lg border border-gray-200 p-6 group hover:border-primary-200 transition-colors focus-within:ring-4 focus-within:ring-primary-100">
+            <details className="group rounded-lg border border-gray-200 bg-white p-6 transition-colors hover:border-primary-200 focus-within:ring-4 focus-within:ring-brand-gold/25">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center focus:outline-none">
                 Do I need to take IELTS or TOEFL?
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
@@ -611,7 +661,7 @@ export default function HomePage() {
               </p>
             </details>
             
-            <details className="bg-white rounded-lg border border-gray-200 p-6 group hover:border-primary-200 transition-colors focus-within:ring-4 focus-within:ring-primary-100">
+            <details className="group rounded-lg border border-gray-200 bg-white p-6 transition-colors hover:border-primary-200 focus-within:ring-4 focus-within:ring-brand-gold/25">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center focus:outline-none">
                 How do I apply for scholarships?
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
@@ -621,7 +671,7 @@ export default function HomePage() {
               </p>
             </details>
             
-            <details className="bg-white rounded-lg border border-gray-200 p-6 group hover:border-primary-200 transition-colors focus-within:ring-4 focus-within:ring-primary-100">
+            <details className="group rounded-lg border border-gray-200 bg-white p-6 transition-colors hover:border-primary-200 focus-within:ring-4 focus-within:ring-brand-gold/25">
               <summary className="font-semibold text-gray-900 cursor-pointer list-none flex justify-between items-center focus:outline-none">
                 Can consultants guarantee admission?
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
@@ -645,7 +695,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/student/register">
-              <Button size="lg" className="w-full sm:w-auto bg-primary-600 hover:bg-primary-700 text-white">
+              <Button size="lg" className="w-full sm:w-auto">
                 Create Free Account
               </Button>
             </Link>
@@ -658,6 +708,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

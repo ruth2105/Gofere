@@ -3,7 +3,8 @@
 import React from 'react';
 import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { GraduationCap, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 
 const subscribeToNothing = () => () => {};
 const getCurrentYear = () => new Date().getFullYear();
@@ -22,15 +23,13 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-primary-600 p-2 rounded-lg">
-                <GraduationCap size={24} />
-              </div>
-              <div>
-                <div className="text-lg font-bold">Gofer Exam</div>
-                <div className="text-xs text-gray-300">Learn. Prepare. Apply. Achieve.</div>
-              </div>
-            </div>
+            <Link
+              href="/"
+              aria-label="Gofer Exam - Home"
+              className="mb-4 inline-flex rounded-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40"
+            >
+              <BrandLogo variant="dark" />
+            </Link>
             <p className="text-gray-300 text-sm mb-4">
               Your trusted partner in educational consultancy, helping students achieve their dreams of studying abroad.
             </p>
@@ -221,8 +220,8 @@ export const Footer: React.FC = () => {
               </Link>
             </div>
           </div>
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Disclaimer: Gofer Exam is an educational consultancy service. We do not guarantee admission, scholarships, or visa approvals. All application outcomes are subject to institution and government decisions.
+          <p className="text-xs text-gray-300 text-center mt-4">
+            Gofer Exam is an independent educational consultancy and is not affiliated with TOEFL, IELTS, or Duolingo English Test. We do not guarantee admission, scholarships, or visa approvals. All outcomes are subject to institution and government decisions.
           </p>
         </div>
       </div>

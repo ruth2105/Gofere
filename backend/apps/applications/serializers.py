@@ -98,3 +98,30 @@ class ApplicationSerializer(serializers.ModelSerializer):
             })
 
         return attrs
+
+
+class ConsultantApplicationSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.get_full_name', read_only=True)
+    student_email = serializers.EmailField(source='student.email', read_only=True)
+    target_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Application
+        fields = (
+            'id',
+            'student_name',
+            'student_email',
+            'application_type',
+            'target_name',
+            'program_name',
+            'degree_level',
+            'status',
+            'deadline_date',
+            'submission_date',
+            'updated_at',
+        )
+        read_only_fields = fields
+
+    def get_target_name(self, application):
+        target = application.university or application.scholarship
+        return target.name if target else 'Target unavailable'

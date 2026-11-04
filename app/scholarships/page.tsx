@@ -70,6 +70,7 @@ export default function ScholarshipsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
+      <main id="main-content" tabIndex={-1}>
       
       {/* Header */}
       <section className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-16">
@@ -87,7 +88,7 @@ export default function ScholarshipsPage() {
       </section>
 
       {/* Filters */}
-      <section className="bg-white shadow-md sticky top-16 z-30">
+      <section className="bg-white shadow-md sticky top-16 z-30" aria-label="Scholarship search filters">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="md:col-span-1">
@@ -95,6 +96,7 @@ export default function ScholarshipsPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <Input
                   type="text"
+                  label="Search scholarships"
                   placeholder="Search scholarships..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -103,16 +105,19 @@ export default function ScholarshipsPage() {
               </div>
             </div>
             <Select
+              label="Country"
               value={countryFilter}
               onChange={(e) => setCountryFilter(e.target.value)}
               options={countries.map(c => ({ value: c, label: c === 'all' ? 'All Countries' : c }))}
             />
             <Select
+              label="Scholarship type"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
               options={types.map(t => ({ value: t, label: t === 'all' ? 'All Types' : t + ' Scholarship' }))}
             />
             <Select
+              label="Study level"
               value={levelFilter}
               onChange={(e) => setLevelFilter(e.target.value)}
               options={levels.map(l => ({ value: l, label: l === 'all' ? 'All Levels' : l }))}
@@ -250,6 +255,7 @@ export default function ScholarshipsPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

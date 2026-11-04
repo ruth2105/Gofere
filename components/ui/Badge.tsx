@@ -25,18 +25,18 @@ export const Badge: React.FC<BadgeProps> = ({
   const variants = {
     default: 'bg-gray-100 text-gray-800 border-gray-200',
     success: 'bg-green-100 text-green-800 border-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    warning: 'bg-brand-gold/20 text-primary-900 border-brand-gold/40',
     danger: 'bg-red-100 text-red-800 border-red-200',
-    info: 'bg-blue-100 text-blue-800 border-blue-200',
+    info: 'bg-primary-50 text-primary-800 border-primary-200',
     primary: 'bg-primary-100 text-primary-800 border-primary-200',
   };
   
   const dotColors = {
     default: 'bg-gray-500',
     success: 'bg-green-500',
-    warning: 'bg-yellow-500',
+    warning: 'bg-brand-gold',
     danger: 'bg-red-500',
-    info: 'bg-blue-500',
+    info: 'bg-primary-600',
     primary: 'bg-primary-600',
   };
   
@@ -58,7 +58,7 @@ export const Badge: React.FC<BadgeProps> = ({
         isInteractive && [
           'cursor-pointer select-none',
           'hover:opacity-80 hover:shadow-sm',
-          'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200',
+          'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40',
           'active:scale-95'
         ],
         className

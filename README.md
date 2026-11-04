@@ -30,7 +30,8 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 - Student registration, login, current profile, and logout use the Django API through same-origin proxy routes. JWTs are set as HttpOnly cookies and unsafe requests require CSRF tokens.
 - Password reset is not available. Student application tracking, document uploads, and consultation booking remain incomplete.
 - Django Admin provides scholarship management, including draft/publish and unpublish controls.
-- Student/consultant dashboards, application tracking, document uploads, and analytics are not complete user workflows.
+- The student application tracker is implemented. Consultant assigned-case and administrator aggregate dashboards are also implemented, but remain pending validation and deployment; consultant case updates are not available.
+- Document uploads and consultation booking remain incomplete.
 
 ## 🛠 Tech Stack
 
@@ -203,8 +204,9 @@ Some repository fixture files contain fictional sample data and are not the live
 - [ ] Verify a real admin-created published scholarship through listing and detail in production
 - [ ] Verify student workflows using an authorized production student account
 
-### Phase 3 (Advanced)
-- [ ] Consultant dashboard
+### Phase 3 (Started; dashboards in progress)
+- [ ] Consultant workspace: read-only assigned-case API with server-side assignment scoping, search, status filtering and pagination; dashboard includes retry and filter clearing. Tests are added; validation and deployment are pending.
+- [ ] Admin aggregate overview: administrator-only counts API and read-only dashboard. Tests are added; validation and deployment are pending.
 - [ ] Admin panel with analytics
 - [ ] Consultation booking system
 - [ ] Rewards program interface

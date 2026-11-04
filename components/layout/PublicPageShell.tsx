@@ -14,13 +14,13 @@ export function PublicPageShell({
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      <header className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-14">
+      <header className="bg-primary-900 text-white py-14">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">{title}</h1>
           <p className="text-lg text-gray-200">{description}</p>
         </div>
       </header>
-      <main className="flex-1 py-12 bg-gray-50">
+      <main className="flex-1 py-12 bg-brand-light">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
       </main>
       <Footer />

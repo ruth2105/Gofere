@@ -99,7 +99,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               ],
               !hasError && !hasSuccess && [
                 'border-gray-300 bg-white',
-                'focus:border-primary-500 focus:ring-primary-100',
+                'focus:border-primary-600 focus:ring-brand-gold/25',
                 'hover:border-gray-400'
               ],
               disabled && [

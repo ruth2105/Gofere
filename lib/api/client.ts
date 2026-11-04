@@ -140,6 +140,42 @@ export interface ApplicationApiRecord {
   updated_at: string;
 }
 
+export interface ConsultantApplicationApiRecord {
+  id: string;
+  student_name: string;
+  student_email: string;
+  application_type: 'UNIVERSITY' | 'SCHOLARSHIP';
+  target_name: string;
+  program_name: string;
+  degree_level: string;
+  status: ApplicationApiRecord['status'];
+  deadline_date: string | null;
+  submission_date: string | null;
+  updated_at: string;
+}
+
+export interface AdminOverviewApiRecord {
+  users: {
+    students: number;
+    consultants: number;
+    administrators: number;
+  };
+  catalogues: {
+    published_scholarships: number;
+    universities: number;
+    destinations: number;
+    active_services: number;
+  };
+  applications: {
+    total: number;
+    by_status: Partial<Record<ApplicationApiRecord['status'], number>>;
+  };
+  consultations: {
+    total: number;
+    by_status: Record<string, number>;
+  };
+}
+
 export interface PaginatedResponse<T> {
   count: number;
   next: string | null;
@@ -340,6 +376,29 @@ export const api = {
       const response = await apiClient.post<ApplicationApiRecord>(
         `/applications/${id}/withdraw/`,
         {}
+      );
+      return response.data;
+    },
+  },
+
+  consultant: {
+    assignedApplications: async (params?: {
+      page?: number;
+      search?: string;
+      status?: ConsultantApplicationApiRecord['status'] | '';
+    }) => {
+      const response = await apiClient.get<PaginatedResponse<ConsultantApplicationApiRecord>>(
+        '/applications/consultant/assigned/',
+        { params }
+      );
+      return response.data;
+    },
+  },
+
+  admin: {
+    overview: async () => {
+      const response = await apiClient.get<AdminOverviewApiRecord>(
+        '/applications/admin/overview/'
       );
       return response.data;
     },

@@ -1,6 +1,6 @@
 # GOFER EXAM Backend API
 
-Django REST API foundation for the GOFER EXAM platform. Several business models exist, but only the authentication and public catalogue endpoints listed below are currently exposed.
+Django REST API for the GOFER EXAM platform. Exposed routes include cookie-based authentication, public catalogues, student-owned application tracking, a read-only consultant assigned-application list, and a read-only administrator aggregate overview. Consultation booking and document upload APIs are not implemented.
 
 ## Technology Stack
 

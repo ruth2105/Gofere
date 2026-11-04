@@ -166,7 +166,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div
           ref={modalRef}
           className={cn(
-            'relative w-full bg-white rounded-xl shadow-2xl',
+            'relative w-full rounded-lg border border-gray-200 bg-white shadow-xl',
             'transform transition-all duration-300 ease-out',
             'animate-in zoom-in-95 slide-in-from-bottom-4',
             sizes[size]
@@ -202,7 +202,7 @@ export const Modal: React.FC<ModalProps> = ({
                   className={cn(
                     "ml-4 p-1.5 rounded-lg transition-all duration-200",
                     "text-gray-400 hover:text-gray-600 hover:bg-gray-100",
-                    "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200",
+                    "focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40",
                     "active:scale-95"
                   )}
                   aria-label="Close modal"

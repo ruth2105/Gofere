@@ -53,7 +53,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // Skeleton Card Component
 export const SkeletonCard: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className={cn('bg-white rounded-xl shadow-md p-6 border border-gray-100', className)}>
+    <div className={cn('rounded-lg border border-gray-200 bg-white p-6 shadow-sm', className)}>
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -148,7 +148,7 @@ export const SkeletonTable: React.FC<{
 // Skeleton Profile Component
 export const SkeletonProfile: React.FC<{ className?: string }> = ({ className }) => {
   return (
-    <div className={cn('bg-white rounded-xl shadow-md p-6 border border-gray-100', className)}>
+    <div className={cn('rounded-lg border border-gray-200 bg-white p-6 shadow-sm', className)}>
       <div className="flex items-start gap-6">
         {/* Avatar */}
         <Skeleton variant="circular" width={100} height={100} />

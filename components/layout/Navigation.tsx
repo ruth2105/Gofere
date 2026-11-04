@@ -3,8 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, GraduationCap } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { BrandLogo } from '@/components/layout/BrandLogo';
 import { cn } from '@/lib/utils';
 
 export const Navigation: React.FC = () => {
@@ -45,10 +46,10 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-40" aria-label="Main navigation">
+    <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white" aria-label="Main navigation">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-primary-900 focus:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-4 focus:py-3 focus:font-semibold focus:text-primary-900 focus:shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40"
         onClick={(event) => {
           const target =
             document.getElementById('main-content')
@@ -69,23 +70,15 @@ export const Navigation: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className={cn(
-              "flex items-center space-x-2 rounded-lg p-1 -ml-1",
-              "transition-all duration-200",
-              "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200",
-              "hover:opacity-90"
+              "rounded-lg p-1 -ml-1 transition-opacity duration-200 hover:opacity-90",
+              "focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40"
             )}
             aria-label="Gofer Exam - Home"
           >
-            <div className="bg-primary-600 p-2 rounded-lg transition-transform hover:scale-105">
-              <GraduationCap className="text-white" size={24} aria-hidden="true" />
-            </div>
-            <div>
-              <div className="text-xl font-bold text-primary-900">Gofer Exam</div>
-              <div className="text-xs text-gray-600">Learn. Prepare. Apply. Achieve.</div>
-            </div>
+            <BrandLogo />
           </Link>
 
           {/* Desktop Navigation */}
@@ -98,10 +91,10 @@ export const Navigation: React.FC = () => {
                   href={link.href}
                   className={cn(
                     'px-3 py-2 rounded-md text-sm font-medium transition-all duration-200',
-                    'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200',
+                    'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40',
                     'relative',
                     active 
-                      ? 'text-primary-700 bg-primary-50 font-semibold' 
+                      ? 'text-primary-900 bg-primary-50 font-semibold' 
                       : 'text-gray-700 hover:text-primary-600 hover:bg-primary-50/50'
                   )}
                   aria-current={active ? 'page' : undefined}
@@ -109,7 +102,7 @@ export const Navigation: React.FC = () => {
                   {link.label}
                   {active && (
                     <span 
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-0.5 bg-primary-600 rounded-full"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-0.5 bg-brand-gold rounded-full"
                       aria-hidden="true"
                     />
                   )}
@@ -138,8 +131,8 @@ export const Navigation: React.FC = () => {
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
               "xl:hidden p-2 rounded-md transition-all duration-200",
-              "text-gray-700 hover:bg-gray-100 hover:text-primary-600",
-              "focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200",
+              "text-gray-700 hover:bg-primary-50 hover:text-primary-700",
+              "focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40",
               "active:scale-95"
             )}
             aria-expanded={isOpen}
@@ -171,7 +164,7 @@ export const Navigation: React.FC = () => {
                 href={link.href}
                 className={cn(
                   'block px-3 py-2 rounded-md text-base font-medium transition-all duration-200',
-                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-primary-200',
+                  'focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40',
                   active
                     ? 'text-primary-700 bg-primary-50 font-semibold border-l-4 border-primary-600'
                     : 'text-gray-700 hover:text-primary-600 hover:bg-primary-50/50 border-l-4 border-transparent'

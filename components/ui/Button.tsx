@@ -25,45 +25,42 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }, ref) => {
     const baseStyles = `
       inline-flex items-center justify-center gap-2 font-medium 
-      transition-all duration-200 rounded-lg 
+      transition-colors duration-200 rounded-md 
       focus:outline-none focus-visible:ring-4 
       disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
-      active:scale-95 select-none
+      select-none
     `;
     
     const variants = {
       primary: `
-        bg-primary-600 text-white 
-        hover:bg-primary-700 hover:shadow-lg hover:-translate-y-0.5
-        focus-visible:ring-primary-200 
-        active:bg-primary-800 active:shadow-md active:translate-y-0
-        shadow-md
+        bg-brand-gold text-brand-navy 
+        hover:bg-brand-gold-hover
+        focus-visible:ring-brand-gold/40
+        active:bg-brand-gold-hover
       `,
       secondary: `
-        bg-accent-teal text-white 
-        hover:bg-accent-teal/90 hover:shadow-lg hover:-translate-y-0.5
-        focus-visible:ring-teal-200
-        active:bg-accent-teal active:shadow-md active:translate-y-0
-        shadow-md
+        bg-brand-navy text-white 
+        hover:bg-primary-800
+        focus-visible:ring-brand-gold/40
+        active:bg-primary-900
       `,
       outline: `
-        border-2 border-primary-600 text-primary-600 bg-transparent
-        hover:bg-primary-50 hover:border-primary-700 hover:shadow-md
-        focus-visible:ring-primary-200
+        border border-primary-600 text-primary-700 bg-transparent
+        hover:bg-primary-50
+        focus-visible:ring-brand-gold/40
         active:bg-primary-100
       `,
       ghost: `
-        text-primary-600 bg-transparent
-        hover:bg-primary-50 hover:text-primary-700
-        focus-visible:ring-primary-200
+        text-primary-700 bg-transparent
+        hover:bg-primary-50
+        focus-visible:ring-brand-gold/40
         active:bg-primary-100
       `,
       danger: `
         bg-red-600 text-white 
-        hover:bg-red-700 hover:shadow-lg hover:-translate-y-0.5
+        hover:bg-red-700
         focus-visible:ring-red-200
-        active:bg-red-800 active:shadow-md active:translate-y-0
-        shadow-md
+        active:bg-red-800
       `
     };
     

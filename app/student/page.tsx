@@ -22,7 +22,16 @@ export default function StudentPage() {
     let active = true;
     api.auth.getCurrentUser()
       .then((profile) => {
-        if (active) setUser(profile);
+        if (!active) return;
+        if (profile.role === 'CONSULTANT') {
+          router.replace('/consultant');
+          return;
+        }
+        if (profile.role === 'ADMIN' || profile.role === 'SUPERADMIN') {
+          router.replace('/admin');
+          return;
+        }
+        setUser(profile);
       })
       .catch((error: unknown) => {
         if (!active) return;
@@ -54,9 +63,9 @@ export default function StudentPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
-        <p className="flex-1 flex items-center justify-center text-gray-600" role="status">
-          Checking your session…
-        </p>
+        <main id="main-content" tabIndex={-1} className="flex-1 flex items-center justify-center">
+          <p className="text-gray-600" role="status">Checking your session…</p>
+        </main>
         <Footer />
       </div>
     );
@@ -66,13 +75,13 @@ export default function StudentPage() {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
-        <div className="flex-1 flex items-center justify-center px-4">
+        <main id="main-content" tabIndex={-1} className="flex-1 flex items-center justify-center px-4">
           <div className="text-center" role="alert">
             <h1 className="mb-3 text-2xl font-bold text-gray-900">Your account could not be loaded</h1>
             <p className="mb-5 text-gray-600">Please check your connection and try again.</p>
             <Button variant="primary" onClick={() => window.location.reload()}>Try Again</Button>
           </div>
-        </div>
+        </main>
         <Footer />
       </div>
     );
@@ -82,7 +91,7 @@ export default function StudentPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       
-      <section className="flex-1 py-20 bg-gray-50">
+      <main id="main-content" tabIndex={-1} className="flex-1 py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <UserCircle className="mx-auto mb-4 text-primary-600" size={64} />
@@ -175,7 +184,7 @@ export default function StudentPage() {
             </div>
           </div>
         </div>
-      </section>
+      </main>
 
       <Footer />
     </div>

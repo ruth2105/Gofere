@@ -24,13 +24,12 @@ export const Card: React.FC<CardProps> = ({
     <Component
       onClick={onClick}
       className={cn(
-        'bg-white rounded-xl shadow-md p-6 transition-all duration-300',
-        'border border-gray-100',
+        'bg-white rounded-lg shadow-sm p-6 transition-colors duration-200',
+        'border border-gray-200',
         isInteractive && [
           'cursor-pointer',
-          'hover:shadow-xl hover:shadow-primary-100/50 hover:-translate-y-1 hover:border-primary-200',
-          'focus-within:ring-4 focus-within:ring-primary-100 focus-within:border-primary-300',
-          'active:scale-[0.99] active:shadow-lg'
+          'hover:shadow-md hover:border-primary-200',
+          'focus-within:ring-4 focus-within:ring-brand-gold/20 focus-within:border-primary-300'
         ],
         className
       )}
@@ -75,7 +74,7 @@ export const CardTitle: React.FC<{
   as: Component = 'h3'
 }) => {
   return (
-    <Component className={cn('text-xl font-bold text-gray-900', className)}>
+    <Component className={cn('text-xl font-bold text-primary-900', className)}>
       {children}
     </Component>
   );

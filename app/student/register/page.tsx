@@ -63,12 +63,13 @@ export default function StudentRegisterPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       
-      <section className="flex-1 py-20 bg-gray-50">
+      <main id="main-content" tabIndex={-1} className="flex-1">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card>
             <CardHeader className="text-center">
               <UserPlus className="mx-auto mb-3 text-primary-600" size={48} />
-              <CardTitle className="text-2xl">Create Your Account</CardTitle>
+              <CardTitle as="h1" className="text-2xl">Create Your Account</CardTitle>
               <CardDescription>
                 Join Gofer Exam and start your study abroad journey
               </CardDescription>
@@ -126,8 +127,8 @@ export default function StudentRegisterPage() {
                 />
 
                 <div className="flex items-start">
-                  <input type="checkbox" className="mt-1 mr-2" required />
-                  <label className="text-sm text-gray-600">
+                  <input id="agree-to-policies" type="checkbox" className="mt-1 mr-2" required />
+                  <label htmlFor="agree-to-policies" className="text-sm text-gray-600">
                     I agree to the{' '}
                     <Link href="/terms" className="text-primary-600 hover:text-primary-700">
                       Terms of Service
@@ -169,6 +170,7 @@ export default function StudentRegisterPage() {
           </Card>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>

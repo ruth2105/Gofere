@@ -24,8 +24,14 @@ export default function StudentLoginPage() {
     setSubmitting(true);
     setErrorMessage('');
     try {
-      await api.auth.login({ email, password });
-      router.replace('/student');
+      const { user } = await api.auth.login({ email, password });
+      router.replace(
+        user.role === 'CONSULTANT'
+          ? '/consultant'
+          : user.role === 'ADMIN' || user.role === 'SUPERADMIN'
+            ? '/admin'
+            : '/student'
+      );
     } catch (error: unknown) {
       setErrorMessage(getApiErrorMessage(error, 'Sign in failed. Please check your details and try again.'));
     } finally {
@@ -37,12 +43,13 @@ export default function StudentLoginPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
       
-      <section className="flex-1 py-20 bg-gray-50">
+      <main id="main-content" tabIndex={-1} className="flex-1">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
           <Card>
             <CardHeader className="text-center">
               <LogIn className="mx-auto mb-3 text-primary-600" size={48} />
-              <CardTitle className="text-2xl">Student Sign In</CardTitle>
+              <CardTitle as="h1" className="text-2xl">Student Sign In</CardTitle>
               <CardDescription>
                 Access your Gofer Exam student portal
               </CardDescription>
@@ -102,6 +109,7 @@ export default function StudentLoginPage() {
           </Card>
         </div>
       </section>
+      </main>
 
       <Footer />
     </div>
