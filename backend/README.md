@@ -162,9 +162,9 @@ Once the server is running, access interactive API documentation:
 
 ### Authentication
 - `POST /api/v1/auth/register/` - User registration
-- `POST /api/v1/auth/login/` - User login (returns JWT tokens)
-- `POST /api/v1/auth/token/refresh/` - Refresh access token
-- `POST /api/v1/auth/logout/` - User logout (blacklist token)
+- `POST /api/v1/auth/login/` - User login; sets HttpOnly JWT cookies
+- `POST /api/v1/auth/token/refresh/` - Refresh the HttpOnly access cookie
+- `POST /api/v1/auth/logout/` - Clear cookies and blacklist the refresh token
 
 ### User Management
 - `GET /api/v1/auth/me/` - Get current user profile
@@ -196,14 +196,19 @@ updates the student's tracker; it does not send an application to an institution
 - `GET /api/v1/destinations/` - List study destinations
 - `GET /api/v1/destinations/{slug}/` - Get destination details
 
+University and destination records are currently public by default because their models
+do not yet have publication status fields. Adding draft/published workflows requires a
+reviewed schema migration before existing records can be hidden safely.
+
 Services are exposed through the public catalogue API. Consultation booking, document management,
 notifications, and consultant profile models are not currently exposed as API routes.
 
 ## Authentication
 
-The API uses JWT (JSON Web Tokens) for authentication.
+The API uses JWT (JSON Web Tokens) stored in HttpOnly cookies. JWT values are never
+returned in login, registration, or refresh JSON responses.
 
-### Getting Tokens
+### Login and cookies
 
 ```bash
 POST /api/v1/auth/login/
@@ -216,8 +221,6 @@ Content-Type: application/json
 
 Response:
 {
-  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
-  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
   "user": {
     "id": "uuid",
     "email": "user@example.com",
@@ -228,19 +231,19 @@ Response:
 }
 ```
 
-### Using Tokens
+### Browser sessions
 
-Include the access token in the Authorization header:
-
-```
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
-```
+The response sets `access_token` and `refresh_token` as HttpOnly cookies. Token values
+are not returned in JSON. Browser clients send cookies with credentials, and unsafe
+requests must include the CSRF token returned by `GET /api/v1/auth/csrf/` in the
+`X-CSRFToken` header.
 
 ### Token Lifecycle
 
 - **Access Token**: Valid for 15 minutes
 - **Refresh Token**: Valid for 7 days
-- Refresh tokens are rotated on each use and old ones are blacklisted
+- Refresh tokens are rotated on each use and old ones are blacklisted.
+- Logout clears both cookies and blacklists the submitted refresh token.
 
 ## User Roles
 

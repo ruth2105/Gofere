@@ -18,7 +18,7 @@ class ScholarshipListSerializer(serializers.ModelSerializer):
             'id', 'name', 'slug', 'short_description', 'provider',
             'country', 'type', 'level', 'amount', 'amount_type',
             'application_deadline', 'days_until_deadline', 'status',
-            'is_featured', 'is_popular', 'is_open', 'view_count'
+            'is_featured', 'is_popular', 'is_open'
         )
 
 
@@ -30,5 +30,12 @@ class ScholarshipDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Scholarship
-        fields = '__all__'
-        read_only_fields = ('id', 'slug', 'view_count', 'application_count', 'created_at', 'updated_at')
+        fields = (
+            'id', 'name', 'slug', 'description', 'short_description',
+            'provider', 'provider_logo', 'country', 'type', 'level',
+            'amount', 'amount_type', 'eligibility', 'required_gpa', 'fields',
+            'target_countries', 'application_deadline', 'application_url',
+            'documents_required', 'status', 'is_featured', 'is_popular',
+            'benefits', 'website_url', 'days_until_deadline', 'is_open',
+        )
+        read_only_fields = ('id', 'slug', 'days_until_deadline', 'is_open')

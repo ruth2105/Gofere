@@ -42,6 +42,9 @@ class ServicePublicApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], str(service.id))
         self.assertEqual(response.data['category'], 'APPLICATION')
+        self.assertNotIn('consultant', response.data)
+        self.assertNotIn('view_count', response.data)
+        self.assertNotIn('purchase_count', response.data)
 
     def test_search_and_category_filters_apply_to_active_services(self):
         matching = self.create_service(

@@ -49,6 +49,19 @@ class ScholarshipPublicApiTests(APITestCase):
         scholarship.refresh_from_db()
         self.assertEqual(scholarship.view_count, 1)
 
+    def test_public_detail_excludes_internal_fields(self):
+        scholarship = self.create_scholarship('Public fields', is_published=True)
+        response = self.client.get(f'/api/v1/scholarships/{scholarship.slug}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('eligibility', response.data)
+        self.assertIn('application_url', response.data)
+        self.assertNotIn('contact_email', response.data)
+        self.assertNotIn('application_count', response.data)
+        self.assertNotIn('success_rate', response.data)
+        self.assertNotIn('view_count', response.data)
+        self.assertNotIn('is_published', response.data)
+
     def test_search_and_country_filter_apply_to_published_results(self):
         matching = self.create_scholarship(
             'Engineering award',

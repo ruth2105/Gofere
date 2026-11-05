@@ -61,10 +61,10 @@ export default function ExamPrepPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1}>
       
-      <section className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-16">
+      <section className="bg-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <BookOpen className="mx-auto mb-4 text-accent-teal" size={48} />
+            <BookOpen className="mx-auto mb-4 text-brand-gold" size={48} />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">English Exam Preparation Guides</h1>
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
               Review practical checklists and continue to official test-provider preparation resources.

@@ -13,6 +13,7 @@ import { Search, Filter, Award, Calendar, MapPin, ExternalLink } from 'lucide-re
 import { getScholarships } from '@/lib/api/scholarships';
 import { formatDate, calculateDaysUntil } from '@/lib/utils';
 import { Scholarship } from '@/types';
+import { FeedbackState } from '@/components/ui/FeedbackState';
 
 const subscribeToNothing = () => () => {};
 const getClientSnapshot = () => true;
@@ -73,10 +74,10 @@ export default function ScholarshipsPage() {
       <main id="main-content" tabIndex={-1}>
       
       {/* Header */}
-      <section className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-16">
+      <section className="bg-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <Award className="mx-auto mb-4 text-accent-teal" size={48} />
+            <Award className="mx-auto mb-4 text-brand-gold" size={48} />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Scholarship Database
             </h1>
@@ -150,11 +151,11 @@ export default function ScholarshipsPage() {
           ) : loading ? (
             <p className="text-center py-12 text-gray-600" role="status">Loading scholarships…</p>
           ) : scholarships.length === 0 ? (
-            <div className="text-center py-12">
-              <Filter className="mx-auto mb-4 text-gray-400" size={48} />
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No scholarships published yet</h3>
-              <p className="text-gray-600">Please check back later for current opportunities.</p>
-            </div>
+            <FeedbackState
+              variant="empty"
+              title="No scholarships are published yet"
+              description="The catalogue is connected, but there are no current records to display. Check back later or confirm opportunities with the relevant provider."
+            />
           ) : filteredScholarships.length === 0 ? (
             <div className="text-center py-12">
               <Filter className="mx-auto mb-4 text-gray-400" size={48} />
@@ -245,7 +246,7 @@ export default function ScholarshipsPage() {
             Need Help with Scholarship Applications?
           </h2>
           <p className="text-lg text-gray-200 mb-6">
-            Our expert consultants can guide you through the application process and help you craft winning essays
+            Gofer Exam may offer application guidance. Confirm the current consultation scope and fees before engaging a service.
           </p>
           <Link href="/contact">
             <Button variant="secondary" size="lg">

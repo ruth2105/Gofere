@@ -557,7 +557,7 @@ export default function HomePage() {
                 Need Personalized Guidance?
               </h2>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Our consultants can help you navigate university applications, scholarship essays, document preparation, and visa requirements.
+                Consultation options may cover university applications, scholarship materials, document preparation, and visa guidance.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
@@ -605,7 +605,7 @@ export default function HomePage() {
                   <Users className="text-primary-700 flex-shrink-0" size={24} />
                   <div>
                     <p className="font-semibold text-gray-900 mb-1">Experienced Consultants</p>
-                    <p className="text-sm text-gray-600">Work with advisors familiar with international admissions</p>
+                    <p className="text-sm text-gray-600">Discuss your questions about international admissions</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -637,7 +637,7 @@ export default function HomePage() {
                 <ArrowRight className="group-open:rotate-90 transition-transform text-primary-600" size={20} aria-hidden="true" />
               </summary>
               <p className="mt-4 text-gray-600 leading-relaxed">
-                Yes, searching for scholarships, browsing universities, and accessing exam preparation materials is completely free. Consultation services are available for a fee.
+                Searching for scholarships, browsing universities, and accessing exam preparation materials is free on this website. Confirm any consultation scope and fees directly with Gofer Exam.
               </p>
             </details>
             

@@ -17,7 +17,7 @@ class UniversityListSerializer(serializers.ModelSerializer):
             'id', 'name', 'slug', 'country', 'city', 'type',
             'world_ranking', 'total_students', 'international_students',
             'international_student_percentage', 'tuition_fee',
-            'is_featured', 'is_partner', 'view_count'
+            'is_featured', 'is_partner'
         )
 
 
@@ -28,5 +28,13 @@ class UniversityDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = University
-        fields = '__all__'
-        read_only_fields = ('id', 'slug', 'view_count', 'application_count', 'created_at', 'updated_at')
+        fields = (
+            'id', 'name', 'slug', 'description', 'country', 'city', 'address',
+            'type', 'founded_year', 'image', 'logo', 'world_ranking',
+            'national_ranking', 'total_students', 'international_students',
+            'international_student_percentage', 'acceptance_rate', 'programs',
+            'popular_majors', 'tuition_fee', 'application_fee',
+            'required_tests', 'minimum_gpa', 'website_url', 'is_featured',
+            'is_partner',
+        )
+        read_only_fields = ('id', 'slug', 'international_student_percentage')

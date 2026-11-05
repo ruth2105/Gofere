@@ -140,14 +140,10 @@ data.
 
 ### Color Palette
 ```typescript
-Primary (Deep Navy):
-- primary-900: #10243A (brand color)
-- primary-600: #0047b3
-- primary-50: #e6f0ff
-
-Accent:
-- accent-gold: #D4AF37
-- accent-teal: #14b8a6
+Primary navy: #212844
+Primary gold: #E9A323
+Light background: #F0EEEF
+White: #FFFFFF
 ```
 
 ### Typography

@@ -18,7 +18,7 @@ class DestinationListSerializer(serializers.ModelSerializer):
             'total_universities', 'international_students',
             'popularity_rank', 'is_popular', 'is_featured',
             'average_tuition_fee', 'average_living_cost',
-            'total_cost_estimate', 'primary_language', 'view_count'
+            'total_cost_estimate', 'primary_language'
         )
 
 
@@ -29,5 +29,17 @@ class DestinationDetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Destination
-        fields = '__all__'
-        read_only_fields = ('id', 'slug', 'view_count', 'created_at', 'updated_at')
+        fields = (
+            'id', 'name', 'slug', 'description', 'flag_emoji', 'image',
+            'banner_image', 'total_universities', 'international_students',
+            'popularity_rank', 'is_popular', 'is_featured',
+            'education_quality_rating', 'average_tuition_fee',
+            'average_living_cost', 'total_cost_estimate',
+            'work_while_studying', 'work_hours_per_week',
+            'post_study_work_visa', 'post_study_work_duration',
+            'primary_language', 'english_required', 'required_tests',
+            'visa_approval_rate', 'visa_processing_time', 'highlights',
+            'scholarship_availability', 'official_education_website',
+            'embassy_website',
+        )
+        read_only_fields = ('id', 'slug', 'total_cost_estimate')

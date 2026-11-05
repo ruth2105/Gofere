@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Gofer Exam - Study Abroad Consultancy & Scholarship Discovery",
-  description: "Your trusted partner for studying abroad. Discover scholarships, prepare for IELTS/TOEFL/Duolingo, get visa guidance, and university admission support.",
+  description: "Educational information and consultancy support for studying abroad, scholarships, and English exam preparation.",
   keywords: "study abroad, scholarships, IELTS, TOEFL, Duolingo, university admission, visa guidance, educational consultancy, Ethiopia",
 };
 

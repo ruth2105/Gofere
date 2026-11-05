@@ -194,7 +194,7 @@ export default function UniversityDetail({ id }: { id: string }) {
                   ))}
                 </CardContent>
               </Card>
-              {(university.website_url || university.admissions_email) && (
+              {(university.website_url || university.address) && (
                 <Card>
                   <CardHeader><CardTitle>Admissions</CardTitle></CardHeader>
                   <CardContent className="space-y-3">
@@ -208,12 +208,6 @@ export default function UniversityDetail({ id }: { id: string }) {
                         Official website <ExternalLink size={14} className="ml-2" />
                       </a>
                     )}
-                    {university.admissions_email && (
-                      <a href={`mailto:${university.admissions_email}`} className="block text-primary-700 hover:underline">
-                        {university.admissions_email}
-                      </a>
-                    )}
-                    {university.phone_number && <p className="text-sm text-gray-700">{university.phone_number}</p>}
                     {university.address && <p className="text-sm text-gray-700">{university.address}</p>}
                   </CardContent>
                 </Card>

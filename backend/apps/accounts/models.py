@@ -10,6 +10,11 @@ from django.utils import timezone
 from django.core.validators import EmailValidator
 
 
+def normalize_email_address(email):
+    """Canonicalize the complete email address for new account operations."""
+    return email.strip().lower()
+
+
 class UserManager(BaseUserManager):
     """Custom manager for User model with email as the unique identifier."""
     
@@ -18,7 +23,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('The Email field must be set')
         
-        email = self.normalize_email(email)
+        email = normalize_email_address(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

@@ -533,6 +533,19 @@ class ApplicationApiTests(APITestCase):
         self.assertNotIn('results', response.data)
         self.assertNotIn('email', response.data)
 
+    def test_superadmin_can_view_admin_overview(self):
+        superadmin = User.objects.create_user(
+            email='superadmin@example.com',
+            password='SecurePassword123!',
+            role='SUPERADMIN',
+        )
+        self.client.force_authenticate(user=superadmin)
+
+        response = self.client.get('/api/v1/applications/admin/overview/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['users']['administrators'], 1)
+
     def test_admin_overview_returns_zero_counts_for_empty_workflows(self):
         administrator = User.objects.create_user(
             email='admin@example.com',

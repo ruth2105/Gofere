@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Briefcase, Search } from 'lucide-react';
 import { getServices } from '@/lib/api/catalogues';
 import { ServiceApiRecord } from '@/lib/api/client';
+import { FeedbackState } from '@/components/ui/FeedbackState';
 
 export default function ServicesPage() {
   const [services, setServices] = useState<ServiceApiRecord[]>([]);
@@ -49,9 +50,9 @@ export default function ServicesPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
 
-      <section className="bg-gradient-to-r from-primary-900 to-primary-700 py-16 text-white">
+      <section className="bg-primary-900 py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <Briefcase className="mx-auto mb-4 text-accent-teal" size={48} aria-hidden="true" />
+          <Briefcase className="mx-auto mb-4 text-brand-gold" size={48} aria-hidden="true" />
           <h1 className="mb-4 text-4xl font-bold md:text-5xl">Our Services</h1>
           <p className="mx-auto max-w-2xl text-xl text-gray-200">
             Explore currently published support services from Gofer Exam.
@@ -93,11 +94,13 @@ export default function ServicesPage() {
               </Button>
             </div>
           ) : filteredServices.length === 0 ? (
-            <p className="py-12 text-center text-gray-600">
-              {services.length === 0
-                ? 'No services have been published yet.'
-                : 'No services match your search.'}
-            </p>
+            <FeedbackState
+              variant="empty"
+              title={services.length === 0 ? 'No services are published yet' : 'No services match your search'}
+              description={services.length === 0
+                ? 'The service catalogue is connected, but no current offerings are available. Contact Gofer Exam to ask what is currently offered.'
+                : 'Try a different service name, category, or keyword.'}
+            />
           ) : (
             <div className="grid gap-6 md:grid-cols-2">
               {filteredServices.map((service) => (

@@ -2,10 +2,11 @@
 Serializers for User authentication and profile management.
 """
 
+from django.db import IntegrityError, transaction
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from .models import User
+from .models import User, normalize_email_address
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -24,6 +25,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         """Validate password confirmation."""
+        attrs['email'] = normalize_email_address(attrs['email'])
+        if User.objects.filter(email__iexact=attrs['email']).exists():
+            raise serializers.ValidationError(
+                {'email': 'A user with this email already exists.'}
+            )
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
@@ -32,15 +38,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """Create new user with STUDENT role by default."""
         validated_data.pop('password2')
         
-        user = User.objects.create_user(
-            email=validated_data['email'],
+        try:
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    email=validated_data['email'],
             password=validated_data['password'],
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
-            phone_number=validated_data.get('phone_number', ''),
-            role='STUDENT'  # Always STUDENT - never trust frontend
-        )
-        
+                    first_name=validated_data.get('first_name', ''),
+                    last_name=validated_data.get('last_name', ''),
+                    phone_number=validated_data.get('phone_number', ''),
+                    role='STUDENT'
+                )
+        except IntegrityError:
+            if User.objects.filter(email__iexact=validated_data['email']).exists():
+                raise serializers.ValidationError(
+                    {'email': 'A user with this email already exists.'}
+                )
+            raise
+
         return user
 
 
@@ -52,17 +66,21 @@ class UserLoginSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         """Validate credentials."""
-        email = attrs.get('email')
+        email = normalize_email_address(attrs.get('email', ''))
         password = attrs.get('password')
         
         if email and password:
-            user = authenticate(email=email, password=password)
+            account = User.objects.filter(email__iexact=email).first()
+            if account and not account.is_active:
+                raise serializers.ValidationError('User account is disabled.')
+
+            user = authenticate(
+                email=account.email if account else email,
+                password=password,
+            )
             
             if not user:
                 raise serializers.ValidationError('Invalid email or password.')
-            
-            if not user.is_active:
-                raise serializers.ValidationError('User account is disabled.')
             
             attrs['user'] = user
             return attrs

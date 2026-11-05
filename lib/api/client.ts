@@ -53,8 +53,6 @@ export interface UniversityApiRecord {
   is_featured: boolean;
   is_partner: boolean;
   website_url?: string;
-  admissions_email?: string;
-  phone_number?: string;
   programs?: string[];
   popular_majors?: string[];
   required_tests?: string[];

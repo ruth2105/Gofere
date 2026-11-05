@@ -59,9 +59,9 @@ export default function UniversitiesPage() {
     <div className="min-h-screen flex flex-col">
       <Navigation />
 
-      <section className="bg-gradient-to-r from-primary-900 to-primary-700 py-16 text-white">
+      <section className="bg-primary-900 py-16 text-white">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <GraduationCap className="mx-auto mb-4 text-accent-teal" size={48} aria-hidden="true" />
+          <GraduationCap className="mx-auto mb-4 text-brand-gold" size={48} aria-hidden="true" />
           <h1 className="mb-4 text-4xl font-bold md:text-5xl">University Directory</h1>
           <p className="mx-auto max-w-2xl text-xl text-gray-200">
             Browse university records maintained by Gofer Exam.

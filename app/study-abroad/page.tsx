@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Globe, MapPin, DollarSign, ArrowRight } from 'lucide-react';
 import { getDestinations } from '@/lib/api/catalogues';
 import { DestinationApiRecord } from '@/lib/api/client';
+import { FeedbackState } from '@/components/ui/FeedbackState';
 
 function formatAnnualCost(value: string): string {
   const amount = Number(value);
@@ -61,10 +62,10 @@ export default function StudyAbroadPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1}>
 
-      <section className="bg-gradient-to-r from-primary-900 to-primary-700 text-white py-16">
+      <section className="bg-primary-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <Globe className="mx-auto mb-4 text-accent-teal" size={48} />
+            <Globe className="mx-auto mb-4 text-brand-gold" size={48} />
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Study Abroad Destinations</h1>
             <p className="text-xl text-gray-200 max-w-2xl mx-auto">
               Explore destinations with information maintained by Gofer Exam.
@@ -111,11 +112,13 @@ export default function StudyAbroadPage() {
               </Button>
             </div>
           ) : filteredDestinations.length === 0 ? (
-            <p className="py-12 text-center text-gray-600">
-              {destinations.length === 0
-                ? 'No destinations have been published yet.'
-                : 'No destinations match your search.'}
-            </p>
+            <FeedbackState
+              variant="empty"
+              title={destinations.length === 0 ? 'No destinations are published yet' : 'No destinations match your search'}
+              description={destinations.length === 0
+                ? 'The destination catalogue is connected, but no current records are available. Check back later for updated listings.'
+                : 'Try a different country, language, or keyword.'}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredDestinations.map((destination) => (
