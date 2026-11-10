@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.consultations',
     'apps.documents',
     'apps.notifications',
+    'apps.opportunities',
     'apps.common',
 ]
 

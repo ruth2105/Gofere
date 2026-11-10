@@ -29,6 +29,7 @@ export const Navigation: React.FC = () => {
 
   const navLinks = [
     { href: '/', label: 'Home' },
+    { href: '/opportunities', label: 'Opportunities' },
     { href: '/scholarships', label: 'Scholarships' },
     { href: '/universities', label: 'Universities' },
     { href: '/study-abroad', label: 'Study Abroad' },

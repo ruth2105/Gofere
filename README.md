@@ -13,6 +13,7 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 
 ### Current Functionality
 - **📚 Scholarship Discovery**: API-backed catalogue with search, filters, and loading/error/empty states. The deployed catalogue is currently empty.
+- **🌐 Opportunity Discovery**: API-backed published opportunities with search, category/country filters, deadlines, and official application links. Listings are manually reviewed before publication.
 - **🌍 Study Abroad Destinations**: API-backed destination listings and detail pages with loading/error/empty states. The deployed catalogue is currently empty.
 - **🎓 University Directory**: API-backed university listings and detail pages with search and loading/error/empty states. The deployed catalogue is currently empty.
 - **📝 Exam Preparation**: Informational preparation pages for IELTS, TOEFL, and the Duolingo English Test; these are not practice-test products.
@@ -20,6 +21,8 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 
 ### Interactive Features
 - Scholarship search and filtering by country, type, and level
+- Opportunity search and filtering by category and country
+- Opportunity detail pages with deadlines and official application links
 - Study destination detail pages
 - University directory search and detail pages
 - Service catalogue search and detail pages
@@ -30,6 +33,7 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 - Student registration, login, current profile, and logout use the Django API through same-origin proxy routes. JWTs are set as HttpOnly cookies and unsafe requests require CSRF tokens.
 - Password reset is not available. Student application tracking, document uploads, and consultation booking remain incomplete.
 - Django Admin provides scholarship management, including draft/publish and unpublish controls.
+- Django Admin provides opportunity draft, review, publish, and unpublish controls; collected records remain private until verified and linked to an opportunity or scholarship.
 - The student application tracker is implemented. Consultant assigned-case and administrator aggregate dashboards are also implemented, but remain pending validation and deployment; consultant case updates are not available.
 - Document uploads and consultation booking remain incomplete.
 
@@ -130,6 +134,7 @@ data.
 ### Public Pages
 - Homepage (`/`)
 - Scholarship catalogue and detail (`/scholarships`, `/scholarships/[id]`); real detail pages require a published API record.
+- Published opportunity catalogue and detail (`/opportunities`, `/opportunities/[slug]`); unpublished or unverified collected records are not exposed by the public API.
 - Study destinations (`/study-abroad`, `/study-abroad/[id]`); driven by the destination API.
 - University directory (`/universities`, `/universities/[id]`); the deployed catalogue is currently empty.
 - Exam preparation hub and information pages (`/exam-prep`, `/exam-prep/ielts`, `/exam-prep/toefl`, `/exam-prep/duolingo`)
@@ -161,7 +166,7 @@ All UI components follow consistent patterns:
 ## 📊 Data
 
 ### Catalogue data
-- Scholarship, university, destination, and service API endpoints are available; the deployed catalogues currently contain zero records.
+- Scholarship, opportunity, university, destination, and service API endpoints are available; deployed catalogue population and the current live deployment must be verified separately.
 - Legacy local destination examples are not used by the live destination catalogue and are not verified current opportunities or partnerships.
 
 ## 🔐 Important Notes

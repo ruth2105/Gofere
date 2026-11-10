@@ -98,7 +98,7 @@ export default function HomePage() {
               Prepare for your English exams, discover international opportunities, and get expert guidance for your study-abroad journey.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Link href="/scholarships">
+              <Link href="/opportunities">
                 <Button size="lg" className="w-full sm:w-auto" leftIcon={<Award size={20} />}>
                   Explore Opportunities
                 </Button>
@@ -136,7 +136,7 @@ export default function HomePage() {
                 <ArrowRight size={18} className="shrink-0 text-primary-700 transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </Link>
               <Link
-                href="/scholarships"
+                href="/opportunities"
                 className="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-brand-light focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/30"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-gold/20 text-sm font-bold text-primary-900">02</span>

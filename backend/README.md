@@ -188,6 +188,15 @@ updates the student's tracker; it does not send an application to an institution
 - Filters: `country`, `type`, `level`, `status`, `is_featured`, `search`, `ordering`
 - Scholarship records are drafts by default. Publish them through Django Admin before they are visible through the public API.
 
+### Opportunities
+- `GET /api/v1/opportunities/` - List published opportunities
+- `GET /api/v1/opportunities/{slug}/` - Get a published opportunity
+- `POST`, `PUT`, `PATCH`, and `DELETE` on the opportunity routes require an authenticated administrator.
+- Filters: `category`, `country`, `level`, `status`, `is_featured`, `search`, `ordering`
+- Opportunities are drafts by default. Django Admin supports manual authoring and publishing.
+- Collected source records remain private until an administrator links them to a scholarship or opportunity and verifies them. Opportunities linked to collected records cannot be published unless all linked source records are verified and available.
+- The public API excludes unpublished opportunities and any opportunity linked to an unverified, incomplete, or unavailable source record.
+
 ### Universities
 - `GET /api/v1/universities/` - List universities
 - `GET /api/v1/universities/{slug}/` - Get university details

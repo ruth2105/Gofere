@@ -101,6 +101,28 @@ export interface ServiceApiRecord {
   image: string | null;
 }
 
+export interface OpportunityApiRecord {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  description: string;
+  organization: string;
+  country: string;
+  category: 'INTERNSHIP' | 'FELLOWSHIP' | 'EXCHANGE' | 'TRAINING' | 'RESEARCH' | 'COMPETITION' | 'GRANT' | 'OTHER';
+  level: 'HIGH_SCHOOL' | 'UNDERGRADUATE' | 'GRADUATE' | 'POSTGRADUATE' | 'DOCTORATE' | 'ALL_LEVELS';
+  eligibility: string[];
+  benefits: string[];
+  application_deadline: string | null;
+  application_url: string;
+  official_website: string;
+  status: 'UPCOMING' | 'OPEN' | 'CLOSED';
+  is_published: boolean;
+  is_featured: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface UserApiRecord {
   id: string;
   email: string;
@@ -497,6 +519,29 @@ export const api = {
     get: async (slug: string) => {
       const response = await apiClient.get<ServiceApiRecord>(
         `/services/${slug}/`
+      );
+      return response.data;
+    },
+  },
+
+  opportunities: {
+    list: async (params?: {
+      category?: OpportunityApiRecord['category'];
+      country?: string;
+      search?: string;
+      page?: number;
+      ordering?: string;
+    }) => {
+      const response = await apiClient.get<PaginatedResponse<OpportunityApiRecord>>(
+        '/opportunities/',
+        { params }
+      );
+      return response.data;
+    },
+
+    get: async (slug: string) => {
+      const response = await apiClient.get<OpportunityApiRecord>(
+        `/opportunities/${slug}/`
       );
       return response.data;
     },
