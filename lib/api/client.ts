@@ -123,6 +123,111 @@ export interface OpportunityApiRecord {
   updated_at: string;
 }
 
+export interface CountryApiRecord {
+  code: string;
+  name: string;
+  official_name: string;
+  alpha3_code: string;
+  flag_emoji: string;
+  region: string;
+  subregion: string;
+}
+
+export interface StudentProfileApiRecord {
+  id: string;
+  date_of_birth: string | null;
+  gender: string;
+  nationality: string;
+  nationality_country: string | null;
+  passport_number: string;
+  address: string;
+  city: string;
+  country: string;
+  residence_country: string | null;
+  postal_code: string;
+  emergency_contact_name: string;
+  emergency_contact_phone: string;
+  emergency_contact_relationship: string;
+  current_education_level: 'HIGH_SCHOOL' | 'UNDERGRADUATE' | 'GRADUATE' | 'POSTGRADUATE';
+  school_name: string;
+  field_of_study: string;
+  graduation_year: number | null;
+  gpa: string | null;
+  target_countries: string[];
+  target_degree_level: string;
+  preferred_fields: string[];
+  budget_range: string;
+  english_test_type: string;
+  english_test_score: string;
+  gre_score: number | null;
+  gmat_score: number | null;
+  sat_score: number | null;
+  profile_completed: boolean;
+}
+
+export interface StudentProfileCompletionApiRecord {
+  percentage: number;
+  is_completed: boolean;
+  missing_fields: string[];
+}
+
+export interface ConsultantDirectoryApiRecord {
+  consultant_id: string;
+  name: string;
+  company_name: string;
+  job_title: string;
+  years_of_experience: number;
+  bio: string;
+  specializations: string[];
+  languages: string[];
+  expertise_countries: string[];
+  expertise_fields: string[];
+  consultation_rate: string;
+  availability_hours: string;
+  timezone: string;
+}
+
+export interface ConsultationApiRecord {
+  id: string;
+  consultant?: string;
+  consultant_name?: string;
+  student_name?: string;
+  student_email?: string;
+  service?: string | null;
+  service_title?: string;
+  type: 'VIDEO' | 'PHONE' | 'IN_PERSON' | 'CHAT';
+  title: string;
+  description: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  duration_minutes: number;
+  timezone: string;
+  meeting_url: string;
+  meeting_id: string;
+  meeting_password: string;
+  status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
+  student_notes?: string;
+  consultant_notes?: string;
+  action_items?: string[];
+  student_rating?: number | null;
+  student_feedback?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NotificationApiRecord {
+  id: string;
+  type: string;
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'URGENT';
+  title: string;
+  message: string;
+  action_url: string;
+  action_text: string;
+  is_read: boolean;
+  read_at: string | null;
+  created_at: string;
+}
+
 export interface UserApiRecord {
   id: string;
   email: string;
@@ -312,9 +417,26 @@ export const api = {
     }) => {
       const response = await apiClient.post<{
         user: UserApiRecord;
+        email: string;
         message: string;
+        resend_cooldown_seconds: number;
       }>('/auth/register/', data);
-      currentUser = response.data.user;
+      return response.data;
+    },
+
+    verifyEmail: async (token: string) => {
+      const response = await apiClient.post<{
+        status: 'verified' | 'already_verified';
+        message: string;
+      }>('/auth/verify-email/', { token });
+      return response.data;
+    },
+
+    resendVerificationEmail: async (email: string) => {
+      const response = await apiClient.post<{ message: string; cooldown_seconds: number }>(
+        '/auth/resend-verification/',
+        { email }
+      );
       return response.data;
     },
 
@@ -401,6 +523,119 @@ export const api = {
     },
   },
 
+  consultations: {
+    consultants: async () => {
+      const response = await apiClient.get<ConsultantDirectoryApiRecord[]>(
+        '/consultations/consultants/'
+      );
+      return response.data;
+    },
+    list: async (params?: { page?: number }) => {
+      const response = await apiClient.get<PaginatedResponse<ConsultationApiRecord>>(
+        '/consultations/',
+        { params }
+      );
+      return response.data;
+    },
+    create: async (data: {
+      consultant: string;
+      type: ConsultationApiRecord['type'];
+      title: string;
+      description?: string;
+      scheduled_date: string;
+      scheduled_time: string;
+      duration_minutes: number;
+      timezone: string;
+      student_notes?: string;
+    }) => {
+      const response = await apiClient.post<ConsultationApiRecord>('/consultations/', data);
+      return response.data;
+    },
+    cancel: async (id: string) => {
+      const response = await apiClient.post<ConsultationApiRecord>(
+        `/consultations/${id}/cancel/`,
+        {}
+      );
+      return response.data;
+    },
+    feedback: async (id: string, rating: number, feedback: string) => {
+      const response = await apiClient.post<ConsultationApiRecord>(
+        `/consultations/${id}/feedback/`,
+        { rating, feedback }
+      );
+      return response.data;
+    },
+    assigned: async (params?: {
+      page?: number;
+      search?: string;
+      status?: ConsultationApiRecord['status'] | '';
+    }) => {
+      const response = await apiClient.get<PaginatedResponse<ConsultationApiRecord>>(
+        '/consultations/consultant/assigned/',
+        { params }
+      );
+      return response.data;
+    },
+    consultantAction: async (
+      id: string,
+      action: 'confirm' | 'cancel' | 'complete',
+      data: { meeting_url?: string; consultant_notes?: string; action_items?: string[] } = {}
+    ) => {
+      const response = await apiClient.post<ConsultationApiRecord>(
+        `/consultations/consultant/assigned/${id}/${action}/`,
+        data
+      );
+      return response.data;
+    },
+  },
+
+  notifications: {
+    list: async (params?: { page?: number; unread?: boolean }) => {
+      const response = await apiClient.get<PaginatedResponse<NotificationApiRecord>>(
+        '/notifications/',
+        { params }
+      );
+      return response.data;
+    },
+    unreadCount: async () => {
+      const response = await apiClient.get<{ count: number }>('/notifications/unread-count/');
+      return response.data.count;
+    },
+    markRead: async (id: string) => {
+      const response = await apiClient.post<NotificationApiRecord>(
+        `/notifications/${id}/read/`,
+        {}
+      );
+      return response.data;
+    },
+    markAllRead: async () => {
+      const response = await apiClient.post<{ updated_count: number }>(
+        '/notifications/read-all/',
+        {}
+      );
+      return response.data.updated_count;
+    },
+  },
+
+  students: {
+    profile: async () => {
+      const response = await apiClient.get<StudentProfileApiRecord>('/students/me/');
+      return response.data;
+    },
+    updateProfile: async (
+      data: Partial<Omit<StudentProfileApiRecord, 'id' | 'profile_completed'>>
+    ) => {
+      const response = await apiClient.patch<StudentProfileApiRecord>('/students/me/', data);
+      return response.data;
+    },
+    profileCompletion: async () => {
+      const response = await apiClient.get<StudentProfileCompletionApiRecord>(
+        '/students/me/completion/'
+      );
+      return response.data;
+    },
+  },
+
   consultant: {
     assignedApplications: async (params?: {
       page?: number;
@@ -410,6 +645,13 @@ export const api = {
       const response = await apiClient.get<PaginatedResponse<ConsultantApplicationApiRecord>>(
         '/applications/consultant/assigned/',
         { params }
+      );
+      return response.data;
+    },
+    startApplicationReview: async (applicationId: string, note: string) => {
+      const response = await apiClient.post<ConsultantApplicationApiRecord>(
+        `/applications/consultant/assigned/${applicationId}/start-review/`,
+        { note }
       );
       return response.data;
     },
@@ -438,6 +680,13 @@ export const api = {
       const response = await apiClient.get<PaginatedResponse<ScholarshipApiRecord>>(
         '/scholarships/',
         { params }
+      );
+      return response.data;
+    },
+
+    eligibleForMe: async (): Promise<PersonalizedScholarshipsResponse> => {
+      const response = await apiClient.get<PersonalizedScholarshipsResponse>(
+        '/scholarships/eligible-for-me/'
       );
       return response.data;
     },
@@ -546,6 +795,13 @@ export const api = {
       return response.data;
     },
   },
+
+  countries: {
+    list: async () => {
+      const response = await apiClient.get<CountryApiRecord[]>('/countries/');
+      return response.data;
+    },
+  },
 };
 
 export function getCurrentUserFromStorage(): UserApiRecord | null {
@@ -557,3 +813,24 @@ export function isAuthenticated(): boolean {
 }
 
 export default apiClient;
+
+export type ScholarshipMatchStatus =
+  | 'ELIGIBLE'
+  | 'NOT_ELIGIBLE'
+  | 'NEEDS_VERIFICATION';
+
+export interface ScholarshipMatchApiRecord {
+  status: ScholarshipMatchStatus;
+  reasons: string[];
+  needs_verification: string[];
+}
+
+export interface PersonalizedScholarshipResult {
+  scholarship: ScholarshipApiRecord;
+  match: ScholarshipMatchApiRecord;
+}
+
+export interface PersonalizedScholarshipsResponse {
+  count: number;
+  results: PersonalizedScholarshipResult[];
+}

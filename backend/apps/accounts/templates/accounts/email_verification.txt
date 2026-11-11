@@ -1,0 +1,10 @@
+Hello {{ first_name }},
+
+Welcome to GOFER EXAM. Verify your email address to activate your student account:
+
+{{ verification_url }}
+
+This link expires in {{ expiration_minutes }} minutes and can be used once.
+If you did not create this account, you can ignore this message.
+
+GOFER EXAM

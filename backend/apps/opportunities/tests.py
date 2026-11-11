@@ -144,6 +144,7 @@ class OpportunitySourceRecordTests(TestCase):
             base_url='https://example.org/',
             source_type='OFFICIAL_PROVIDER',
             collection_method='PERMITTED_HTML',
+            is_active=True,
         )
 
         self.other_source = OpportunitySource.objects.create(
@@ -285,6 +286,116 @@ class OpportunitySourceRecordTests(TestCase):
 
         self.assertEqual(record.verified_by, verifier)
         self.assertEqual(record.scholarship, scholarship)
+
+    def test_external_scholarship_cannot_publish_until_source_is_verified(self):
+        scholarship = Scholarship.objects.create(
+            name='Source-backed scholarship',
+            description='A source-backed scholarship.',
+            provider='Example Foundation',
+            country='Ethiopia',
+            type='FULL',
+            level='GRADUATE',
+            amount=1000,
+            application_deadline=(
+                timezone.now() + timedelta(days=30)
+            ).date(),
+        )
+        record = OpportunitySourceRecord.objects.create(
+            **self.record_kwargs(scholarship=scholarship)
+        )
+
+        scholarship.is_published = True
+        with self.assertRaises(ValidationError):
+            scholarship.save()
+
+        verifier = User.objects.create_user(
+            email='scholarship-reviewer@example.com',
+            password='SecurePassword123!',
+            role='ADMIN',
+        )
+        record.verification_status = 'VERIFIED'
+        record.verified_at = timezone.now()
+        record.verified_by = verifier
+        record.save()
+
+        scholarship.is_published = True
+        scholarship.save()
+        scholarship.refresh_from_db()
+        self.assertTrue(scholarship.is_published)
+
+    def test_unavailable_linked_source_unpublishes_scholarship(self):
+        scholarship = Scholarship.objects.create(
+            name='Verified scholarship',
+            description='A verified scholarship.',
+            provider='Example Foundation',
+            country='Ethiopia',
+            type='FULL',
+            level='GRADUATE',
+            amount=1000,
+            application_deadline=(
+                timezone.now() + timedelta(days=30)
+            ).date(),
+        )
+        verifier = User.objects.create_user(
+            email='scholarship-verifier@example.com',
+            password='SecurePassword123!',
+            role='ADMIN',
+        )
+        record = OpportunitySourceRecord.objects.create(
+            **self.record_kwargs(
+                scholarship=scholarship,
+                verification_status='VERIFIED',
+                verified_at=timezone.now(),
+                verified_by=verifier,
+            )
+        )
+        scholarship.is_published = True
+        scholarship.save()
+
+        record.source_status = 'UNAVAILABLE'
+        record.save()
+
+        scholarship.refresh_from_db()
+        record.refresh_from_db()
+        self.assertFalse(scholarship.is_published)
+        self.assertEqual(record.verification_status, 'SOURCE_UNAVAILABLE')
+        self.assertIsNone(record.verified_at)
+        self.assertIsNone(record.verified_by_id)
+
+    def test_disabling_linked_source_unpublishes_scholarship(self):
+        scholarship = Scholarship.objects.create(
+            name='Active source scholarship',
+            description='A scholarship from an active source.',
+            provider='Example Foundation',
+            country='Ethiopia',
+            type='FULL',
+            level='GRADUATE',
+            amount=1000,
+            application_deadline=(
+                timezone.now() + timedelta(days=30)
+            ).date(),
+        )
+        verifier = User.objects.create_user(
+            email='active-source-verifier@example.com',
+            password='SecurePassword123!',
+            role='ADMIN',
+        )
+        OpportunitySourceRecord.objects.create(
+            **self.record_kwargs(
+                scholarship=scholarship,
+                verification_status='VERIFIED',
+                verified_at=timezone.now(),
+                verified_by=verifier,
+            )
+        )
+        scholarship.is_published = True
+        scholarship.save()
+
+        self.source.is_active = False
+        self.source.save()
+
+        scholarship.refresh_from_db()
+        self.assertFalse(scholarship.is_published)
 
     def test_optional_scholarship_and_verifier_deletions_preserve_record(self):
         scholarship = Scholarship.objects.create(
@@ -699,6 +810,7 @@ class OpportunitySourceRecordAdminTests(TestCase):
             base_url='https://example.org/',
             source_type='OFFICIAL_PROVIDER',
             collection_method='API',
+            is_active=True,
         )
         self.run = CollectionRun.objects.create(source=self.source)
         self.opportunity = Opportunity.objects.create(

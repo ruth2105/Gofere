@@ -4,6 +4,7 @@ Serializers for User authentication and profile management.
 
 from django.db import IntegrityError, transaction
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from .models import User, normalize_email_address
@@ -81,6 +82,11 @@ class UserLoginSerializer(serializers.Serializer):
             
             if not user:
                 raise serializers.ValidationError('Invalid email or password.')
+
+            if user.is_student and not user.is_verified:
+                raise PermissionDenied(
+                    'Please verify your email before signing in.'
+                )
             
             attrs['user'] = user
             return attrs
@@ -114,3 +120,18 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'phone_number')
+
+
+class EmailVerificationSerializer(serializers.Serializer):
+    """Validate a token submitted by the email-verification page."""
+
+    token = serializers.CharField(write_only=True, max_length=128, trim_whitespace=False)
+
+
+class ResendVerificationSerializer(serializers.Serializer):
+    """Validate an address for the verification-email resend endpoint."""
+
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        return normalize_email_address(value)

@@ -1,3 +1,4 @@
+
 """
 URL configuration for GOFER EXAM project.
 """
@@ -9,32 +10,50 @@ from django.conf.urls.static import static
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
-    SpectacularRedocView
+    SpectacularRedocView,
 )
 
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
-    
+
     # API Documentation
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/v1/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-    
+
     # API v1 endpoints
     path('api/v1/auth/', include('apps.accounts.urls')),
     path('api/v1/applications/', include('apps.applications.urls')),
+    path('api/v1/consultations/', include('apps.consultations.urls')),
+    path('api/v1/notifications/', include('apps.notifications.urls')),
     path('api/v1/scholarships/', include('apps.scholarships.urls')),
+    path('api/v1/countries/', include('apps.common.urls')),
     path('api/v1/opportunities/', include('apps.opportunities.urls')),
     path('api/v1/services/', include('apps.services.urls')),
     path('api/v1/universities/', include('apps.universities.urls')),
     path('api/v1/destinations/', include('apps.destinations.urls')),
+    path('api/v1/students/', include('apps.students.urls')),
 ]
 
-# Serve media files in development
+# Debug Toolbar (development only)
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    import debug_toolbar
+
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
+# Serve media and static files in development
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
+    )
+    urlpatterns += static(
+        settings.STATIC_URL,
+        document_root=settings.STATIC_ROOT,
+    )
 
 # Customize admin site
 admin.site.site_header = "GOFER EXAM Administration"

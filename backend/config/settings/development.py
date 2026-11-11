@@ -48,8 +48,11 @@ INTERNAL_IPS = [
     'localhost',
 ]
 
-# Email backend for development (prints to console)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Email backend for development (prints to console unless explicitly configured)
+EMAIL_BACKEND = config(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend',
+)
 
 # Disable password validation for easier development
 AUTH_PASSWORD_VALIDATORS = []

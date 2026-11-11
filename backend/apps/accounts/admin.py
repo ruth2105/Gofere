@@ -30,4 +30,4 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     
-    readonly_fields = ('date_joined', 'last_login')
+    readonly_fields = ('date_joined', 'last_login', 'is_verified')

@@ -142,3 +142,26 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_admin(self):
         """Check if user is an admin or superadmin."""
         return self.role in ['ADMIN', 'SUPERADMIN']
+
+
+class EmailVerificationToken(models.Model):
+    """A single active, hashed email-verification token per user."""
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='email_verification_token',
+    )
+    token_hash = models.CharField(max_length=64, unique=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    expires_at = models.DateTimeField()
+    last_sent_at = models.DateTimeField()
+    used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['expires_at']),
+        ]
+
+    def __str__(self):
+        return f'Email verification for {self.user_id}'

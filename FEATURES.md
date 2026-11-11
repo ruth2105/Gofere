@@ -1,4 +1,11 @@
-# Gofer Exam - Feature Completion Checklist
+# Historical Feature Checklist — Superseded
+
+> **Do not use the checklist below as a description of the current application.**
+> It contains outdated demo-data counts and feature claims. For verified current
+> implementation status, test results, and production blockers, see
+> [PROJECT_AUDIT.md](./PROJECT_AUDIT.md).
+
+The checklist below is retained only as a historical snapshot.
 
 ## ✅ Completed Features
 

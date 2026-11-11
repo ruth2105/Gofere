@@ -169,13 +169,26 @@ python manage.py runserver
 ```bash
 curl -X POST http://localhost:8000/api/v1/auth/register/ \
   -H "Content-Type: application/json" \
+  -H "X-CSRFToken: <csrf-token-from-/api/v1/auth/csrf/>" \
   -d '{
     "email": "newuser@example.com",
-    "password": "secure123",
-    "password2": "secure123",
+    "password": "<strong-password>",
+    "password2": "<same-strong-password>",
     "first_name": "John",
     "last_name": "Doe"
   }'
+```
+
+Registration creates an unverified student account and does not issue session
+cookies. In development, open the verification URL printed by Django's console
+email backend; production must use a configured SMTP provider and verified sender.
+After verification, sign in as usual. Verification requests can be resent with:
+
+```bash
+curl -X POST http://localhost:8000/api/v1/auth/resend-verification/ \
+  -H "Content-Type: application/json" \
+  -H "X-CSRFToken: <csrf-token-from-/api/v1/auth/csrf/>" \
+  -d '{"email":"newuser@example.com"}'
 ```
 
 **Login**:
@@ -220,7 +233,7 @@ const handleRegister = async (data) => {
   try {
     const result = await api.auth.register(data);
     console.log('User:', result.user);
-    console.log('Tokens:', result.tokens);
+    // Registration does not sign the student in; ask them to verify their email.
   } catch (error) {
     console.error(error);
   }
@@ -230,7 +243,7 @@ const handleRegister = async (data) => {
 const handleLogin = async (email, password) => {
   try {
     const result = await api.auth.login({ email, password });
-    // Tokens are automatically stored
+    // HttpOnly session cookies are set by the API on successful login.
   } catch (error) {
     console.error(error);
   }

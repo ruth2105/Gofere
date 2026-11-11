@@ -6,11 +6,14 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from apps.accounts.models import User
 from apps.common.permissions import IsAdminUser, IsConsultant, IsStudent
 from apps.consultations.models import Consultation
 from apps.destinations.models import Destination
+from apps.notifications.models import Notification
 from apps.scholarships.models import Scholarship
 from apps.services.models import Service
 from apps.universities.models import University
@@ -78,6 +81,43 @@ class ConsultantAssignedApplicationsView(ListAPIView):
                 raise ValidationError({'status': 'Choose a valid application status.'})
             queryset = queryset.filter(status=status_filter)
         return queryset
+
+
+class ConsultantStartApplicationReviewView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsConsultant]
+
+    def post(self, request, application_id):
+        note = request.data.get('note', '')
+        if not isinstance(note, str) or len(note) > 500:
+            raise ValidationError({'note': 'Enter a review note of up to 500 characters.'})
+        note = note.strip()
+
+        with transaction.atomic():
+            application = get_object_or_404(
+                Application.objects.select_for_update(),
+                id=application_id,
+                consultant=request.user,
+            )
+            if application.status != 'SUBMITTED':
+                raise ValidationError({
+                    'status': 'Only submitted applications can be moved into review.'
+                })
+
+            application.add_status_update(
+                'UNDER_REVIEW',
+                note or 'A consultant has started reviewing this application.',
+            )
+            Notification.create_notification(
+                user=application.student,
+                type='APPLICATION',
+                title='Application review started',
+                message='A consultant has started reviewing your application.',
+                action_url='/student/applications',
+                action_text='View application',
+                application=application,
+            )
+
+        return Response(ConsultantApplicationSerializer(application).data)
 
 
 class ApplicationViewSet(

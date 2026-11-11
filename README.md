@@ -30,7 +30,7 @@ A study-abroad information and consultancy website with a Next.js frontend and a
 - Responsive layouts (manual device/accessibility sign-off is still required)
 
 ### Account and administration status
-- Student registration, login, current profile, and logout use the Django API through same-origin proxy routes. JWTs are set as HttpOnly cookies and unsafe requests require CSRF tokens.
+- Student registration and email verification use the Django API through same-origin proxy routes. Students must verify before login; verified sessions use HttpOnly JWT cookies and unsafe requests require CSRF tokens.
 - Password reset is not available. Student application tracking, document uploads, and consultation booking remain incomplete.
 - Django Admin provides scholarship management, including draft/publish and unpublish controls.
 - Django Admin provides opportunity draft, review, publish, and unpublish controls; collected records remain private until verified and linked to an opportunity or scholarship.
@@ -139,7 +139,7 @@ data.
 - University directory (`/universities`, `/universities/[id]`); the deployed catalogue is currently empty.
 - Exam preparation hub and information pages (`/exam-prep`, `/exam-prep/ielts`, `/exam-prep/toefl`, `/exam-prep/duolingo`)
 - About, services, contact, FAQ, privacy, terms, and disclaimer pages.
-- Student login and registration (`/student/login`, `/student/register`), authenticated profile (`/student`), and password-assistance notice (`/student/forgot-password`); password reset is not implemented.
+- Student login and registration (`/student/login`, `/student/register`), email verification (`/student/verify-email`), authenticated profile (`/student`), and password-assistance notice (`/student/forgot-password`); password reset is not implemented.
 
 ## 🎨 Design System
 
@@ -195,6 +195,7 @@ Some repository fixture files contain fictional sample data and are not the live
 - [x] Django/PostgreSQL deployment and public scholarship, university, and destination catalogue APIs
 - [x] Django Admin scholarship draft/publish controls
 - [x] Registration, login, refresh, logout, and current-user backend endpoints
+- [x] Student email-verification and resend workflow with hashed expiring tokens, login enforcement, and Django email-backend delivery
 - [x] Connect frontend registration/login/profile/logout using HttpOnly cookie sessions and CSRF protection
 - [x] Connect university and destination pages to API-backed data
 - [x] Expose active services through a read-only API and connect the service pages

@@ -8,7 +8,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { FileText, UserCircle, UserPlus } from 'lucide-react';
+import { Award, Bell, FileText, UserCircle, UserPlus } from 'lucide-react';
 import { api, UserApiRecord } from '@/lib/api/client';
 
 export default function StudentPage() {
@@ -123,6 +123,9 @@ export default function StudentPage() {
               <CardContent className="space-y-2 text-sm text-gray-600">
                 <p>{user.email}</p>
                 {user.phone_number && <p>{user.phone_number}</p>}
+                <Link href="/student/profile" className="inline-block pt-2 font-semibold text-primary-700 hover:underline">
+                  Edit student profile
+                </Link>
               </CardContent>
             </Card>
 
@@ -142,6 +145,37 @@ export default function StudentPage() {
                 </Link>
               </CardContent>
             </Card>
+            <Card className="text-center">
+              <CardHeader>
+                <Bell className="mx-auto mb-3 text-primary-600" size={48} />
+                <CardTitle>Notifications</CardTitle>
+                <CardDescription>See consultation and application updates.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/notifications">
+                  <Button variant="secondary" className="w-full">View Notifications</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <Award className="mx-auto mb-3 text-primary-600" size={48} />
+                <CardTitle>Scholarships Matched for You</CardTitle>
+                <CardDescription>
+                  Check scholarship eligibility against your nationality,
+                  education level, GPA, and academic interests.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link
+                  href="/student/scholarships"
+                  className="inline-flex min-h-10 w-full items-center justify-center rounded-md bg-brand-gold px-5 py-2.5 text-base font-medium text-brand-navy transition-colors hover:bg-brand-gold-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-gold/40"
+                >
+                  View My Matches
+                </Link>
+              </CardContent>
+            </Card>
 
             <Card className="text-center">
               <CardHeader>
@@ -156,6 +190,18 @@ export default function StudentPage() {
                   <Button variant="secondary" className="w-full">
                     Track Applications
                   </Button>
+                </Link>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardHeader>
+                <UserPlus className="mx-auto mb-3 text-primary-600" size={48} />
+                <CardTitle>Consultant Support</CardTitle>
+                <CardDescription>Request a session with a verified consultant and track confirmations.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/student/consultations">
+                  <Button variant="secondary" className="w-full">Manage Consultations</Button>
                 </Link>
               </CardContent>
             </Card>

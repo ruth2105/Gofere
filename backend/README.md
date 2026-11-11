@@ -1,6 +1,6 @@
 # GOFER EXAM Backend API
 
-Django REST API for the GOFER EXAM platform. Exposed routes include cookie-based authentication, public catalogues, student-owned application tracking, a read-only consultant assigned-application list, and a read-only administrator aggregate overview. Consultation booking and document upload APIs are not implemented.
+Django REST API for the GOFER EXAM platform. Exposed routes include cookie-based authentication, public catalogues, student-owned applications and profiles, consultant case review and consultation workflows, and an administrator aggregate overview. Document upload APIs are not implemented.
 
 ## Technology Stack
 
@@ -75,9 +75,11 @@ After installing PostgreSQL, create the database and user:
 # Connect to PostgreSQL (use the password you set during installation)
 psql -U postgres
 
-# In the PostgreSQL prompt, run these commands:
+# In the PostgreSQL prompt, run these commands. Set a unique local password
+# when prompted; do not reuse a shared or production credential.
 CREATE DATABASE gofer_exam_db;
-CREATE USER gofer_exam_user WITH PASSWORD 'postgres';
+CREATE USER gofer_exam_user;
+\password gofer_exam_user
 ALTER ROLE gofer_exam_user SET client_encoding TO 'utf8';
 ALTER ROLE gofer_exam_user SET default_transaction_isolation TO 'read committed';
 ALTER ROLE gofer_exam_user SET timezone TO 'UTC';
@@ -116,11 +118,18 @@ pip install -r requirements\development.txt
 
 #### 4. Environment Configuration
 
-The `.env` file already exists with default development settings. Update if needed:
+Create `backend\.env` from `.env.example` only if it does not already exist, then
+set the local database password you chose above. Never overwrite an existing
+environment file:
 
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
+
+In `backend\.env`, configure at least:
+```ini
 DJANGO_SETTINGS_MODULE=config.settings.development
-DB_PASSWORD=your_postgres_password
+DB_PASSWORD=your-unique-local-database-password
 ```
 
 #### 5. Run Migrations
@@ -161,7 +170,9 @@ Once the server is running, access interactive API documentation:
 ## API Endpoints
 
 ### Authentication
-- `POST /api/v1/auth/register/` - User registration
+- `POST /api/v1/auth/register/` - Create an unverified student account and request a verification email; does not sign in or set session cookies
+- `POST /api/v1/auth/verify-email/` - Verify an account using the one-time token sent by email
+- `POST /api/v1/auth/resend-verification/` - Request a verification email (account status is not disclosed)
 - `POST /api/v1/auth/login/` - User login; sets HttpOnly JWT cookies
 - `POST /api/v1/auth/token/refresh/` - Refresh the HttpOnly access cookie
 - `POST /api/v1/auth/logout/` - Clear cookies and blacklist the refresh token
@@ -169,6 +180,12 @@ Once the server is running, access interactive API documentation:
 ### User Management
 - `GET /api/v1/auth/me/` - Get current user profile
 - `PATCH /api/v1/auth/me/` - Update current user profile
+
+### Country Registry
+- `GET /api/v1/countries/` - List active ISO 3166-1 countries and territories, including alpha-2/alpha-3 codes, names, and flag emojis
+- The country registry is read-only through the public API; administrators manage entries through Django Admin.
+- Run `python manage.py import_countries` to import or update the bundled `pycountry` registry. The command does not delete entries or change active status.
+- Region and subregion values remain blank until populated from a separately verified geographical dataset.
 
 ### Student Applications
 - `GET /api/v1/applications/` - List the authenticated student's applications
@@ -182,11 +199,43 @@ Application records are scoped to the authenticated student. Students cannot set
 consultant, staff notes, or workflow status directly. Marking an application as submitted only
 updates the student's tracker; it does not send an application to an institution.
 
+### Consultant Application Review
+- `GET /api/v1/applications/consultant/assigned/` - List only applications assigned to the authenticated consultant
+- `POST /api/v1/applications/consultant/assigned/{id}/start-review/` - Move an assigned submitted application into review, with an optional student-visible note
+- The review action does not make admission decisions; administrators continue to manage final application decisions.
+
+### Student Profiles
+- `GET /api/v1/students/me/` - Retrieve the authenticated student's profile
+- `PATCH /api/v1/students/me/` - Update the authenticated student's profile
+- `GET /api/v1/students/me/completion/` - Get profile completion and missing fields
+
+Student profiles accept `nationality_country` and `residence_country` as active ISO alpha-2
+country codes. Existing free-text `nationality` and `country` fields remain available for
+backward compatibility and are synchronized to the registered country name when a registry
+reference is supplied.
+
+### Consultations
+- `GET /api/v1/consultations/consultants/` - List verified, available consultants for student accounts
+- `GET /api/v1/consultations/` - List the authenticated student's consultation requests
+- `POST /api/v1/consultations/` - Request a consultation; the request remains pending until confirmed
+- `POST /api/v1/consultations/{id}/cancel/` - Cancel an owned upcoming request
+- `POST /api/v1/consultations/{id}/feedback/` - Rate a completed consultation once
+- `GET /api/v1/consultations/consultant/assigned/` - List consultations assigned to the authenticated consultant
+- `POST /api/v1/consultations/consultant/assigned/{id}/confirm/` - Confirm a pending request and optionally provide a meeting URL
+- `POST /api/v1/consultations/consultant/assigned/{id}/cancel/` - Cancel an upcoming assigned request
+- `POST /api/v1/consultations/consultant/assigned/{id}/complete/` - Record a completed session, private notes, and action items
+
+Booking times include an IANA time zone. The API rejects past requests and overlapping pending or
+confirmed bookings for the same consultant. This is a manual request-and-confirm workflow; it does
+not synchronize external calendars, send reminders, or process consultation payments.
+
 ### Scholarships
 - `GET /api/v1/scholarships/` - List published scholarships (with filters)
 - `GET /api/v1/scholarships/{slug}/` - Get a published scholarship
+- `GET /api/v1/scholarships/eligible-for-me/` - Get current open scholarships with personalized eligibility results (authenticated students only)
 - Filters: `country`, `type`, `level`, `status`, `is_featured`, `search`, `ordering`
 - Scholarship records are drafts by default. Publish them through Django Admin before they are visible through the public API.
+- Personalized matching uses structured country, degree, GPA, and field-of-study data. Missing or unconfirmed details are reported for verification; free-text eligibility descriptions are not interpreted.
 
 ### Opportunities
 - `GET /api/v1/opportunities/` - List published opportunities
@@ -209,8 +258,9 @@ University and destination records are currently public by default because their
 do not yet have publication status fields. Adding draft/published workflows requires a
 reviewed schema migration before existing records can be hidden safely.
 
-Services are exposed through the public catalogue API. Consultation booking, document management,
-notifications, and consultant profile models are not currently exposed as API routes.
+Services are exposed through the public catalogue API. Document management and notifications do
+not yet have user-facing API routes. Consultant profiles are exposed only as a limited directory
+of verified consultants for student consultation requests.
 
 ## Authentication
 
@@ -306,29 +356,25 @@ python manage.py collectstatic
 
 ```powershell
 # Run all tests
-pytest
+python manage.py test
 
 # Run specific app tests
-pytest apps/accounts/tests/
-
-# Run with coverage
-pytest --cov=apps --cov-report=html
-
-# View coverage report
-start htmlcov/index.html
+python manage.py test apps.accounts
 ```
 
-## Database Seeding
+## Reference Data
 
-To populate the database with demo data from Phase 1:
+Do not seed invented scholarships, universities, opportunities, or user accounts.
+To import or update the standardized ISO country registry:
 
 ```powershell
-python scripts/seed_database.py
+python manage.py import_countries
 ```
 
 ## Environment Variables
 
-Copy `.env.example` to `.env` and configure:
+Use `backend\.env.example` as a reference when creating `backend\.env`. Never
+commit the latter or copy production credentials into a development environment.
 
 ```ini
 # Required
@@ -336,15 +382,39 @@ DJANGO_SETTINGS_MODULE=config.settings.development
 SECRET_KEY=your-secret-key
 DB_NAME=gofer_exam_db
 DB_USER=gofer_exam_user
-DB_PASSWORD=postgres
+DB_PASSWORD=your-unique-local-database-password
 DB_HOST=localhost
 DB_PORT=5432
 
 # Optional
 ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:3000
-DEFAULT_FROM_EMAIL=noreply@goferexam.com
+GOFER_FRONTEND_URL=http://localhost:3000
+EMAIL_VERIFICATION_TOKEN_TTL_MINUTES=60
+EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS=60
+
+# Configure before production; use an address on a domain verified with your provider.
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+GOFER_EMAIL_FROM=no-reply@YOUR_VERIFIED_DOMAIN
+EMAIL_HOST=smtp.your-provider.example
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_USE_SSL=False
+EMAIL_HOST_USER=your-provider-username
+EMAIL_HOST_PASSWORD=your-provider-password
+EMAIL_TIMEOUT=10
 ```
+
+Development uses Django's console email backend by default; verification messages
+are printed to the backend console and are not delivered to an inbox. Production
+requires an explicitly configured email backend, SMTP host, and sender address.
+An SMTP/provider acceptance is not proof of inbox delivery; confirm the provider
+and verified sender domain before inviting real users. Registration returns an
+error if the configured backend rejects the verification message. A created but
+unverified account can request a fresh message from the sign-in page.
+The verification and resend endpoints are rate-limited with Django REST Framework
+scoped throttles. Configure a shared Django cache for consistent limits across
+multiple production workers.
 
 ## Troubleshooting
 
@@ -371,10 +441,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ### Migration Issues
 
-Reset migrations (⚠️ destroys data):
+Inspect migration state and planned operations before diagnosing a migration issue.
+Do not reset or fake migration history on a database containing data:
 ```powershell
-python manage.py migrate --fake app_name zero
-python manage.py migrate app_name
+python manage.py showmigrations
+python manage.py migrate --plan
 ```
 
 ### Port Already in Use
@@ -397,6 +468,11 @@ For production deployment:
 7. Configure logging and monitoring
 8. Use gunicorn or similar WSGI server
 9. Set up reverse proxy (nginx)
+
+The Render API start command in `render.yaml` runs migrations at service startup.
+Before migrating a database containing user data, inspect the migration and confirm
+an available backup and recovery path. The included free database is temporary
+and is not suitable for production data or durable document storage.
 
 ## Contributing
 

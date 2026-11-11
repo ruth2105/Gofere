@@ -5,6 +5,7 @@ These settings are shared across all environments.
 
 from pathlib import Path
 from decouple import config
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -177,9 +178,43 @@ SPECTACULAR_SETTINGS = {
     'SORT_OPERATIONS': False,
 }
 
-# Email Configuration (using console backend for development by default)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@goferexam.com')
+# Email Configuration
+EMAIL_BACKEND = config(
+    'EMAIL_BACKEND',
+    default='django.core.mail.backends.console.EmailBackend',
+)
+EMAIL_HOST = config('EMAIL_HOST', default='')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
+DEFAULT_FROM_EMAIL = config('GOFER_EMAIL_FROM', default='webmaster@localhost')
+GOFER_FRONTEND_URL = config(
+    'GOFER_FRONTEND_URL',
+    default='http://localhost:3000',
+).rstrip('/')
+EMAIL_VERIFICATION_TOKEN_TTL_MINUTES = config(
+    'EMAIL_VERIFICATION_TOKEN_TTL_MINUTES',
+    default=60,
+    cast=int,
+)
+EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS = config(
+    'EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS',
+    default=60,
+    cast=int,
+)
+if EMAIL_VERIFICATION_TOKEN_TTL_MINUTES < 1:
+    raise ImproperlyConfigured('EMAIL_VERIFICATION_TOKEN_TTL_MINUTES must be positive.')
+if EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS < 1:
+    raise ImproperlyConfigured('EMAIL_VERIFICATION_RESEND_COOLDOWN_SECONDS must be positive.')
+
+REST_FRAMEWORK['DEFAULT_THROTTLE_RATES'] = {
+    'auth_register': '5/hour',
+    'auth_verify': '20/hour',
+    'auth_resend': '3/hour',
+}
 
 # Logging Configuration
 LOGGING = {

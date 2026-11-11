@@ -16,7 +16,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, URLValidator
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.text import slugify
 
@@ -223,7 +223,30 @@ class OpportunitySource(models.Model):
 
         self.full_clean()
 
-        return super().save(*args, **kwargs)
+        with transaction.atomic():
+            result = super().save(*args, **kwargs)
+
+            if self.pk and (
+                not self.is_active or self.reliability_status == 'DISABLED'
+            ):
+                from apps.scholarships.models import Scholarship
+
+                Scholarship.objects.filter(
+                    is_published=True,
+                    source_records__source_id=self.pk,
+                ).update(
+                    is_published=False,
+                    updated_at=timezone.now(),
+                )
+                Opportunity.objects.filter(
+                    is_published=True,
+                    source_records__source_id=self.pk,
+                ).update(
+                    is_published=False,
+                    updated_at=timezone.now(),
+                )
+
+            return result
 
     def __str__(self):
         return f'{self.name} ({self.organization})'
@@ -733,6 +756,11 @@ class OpportunitySourceRecord(models.Model):
                     'source_status': 'Only available source records can be verified.'
                 })
 
+            if not self.source.is_active:
+                raise ValidationError({
+                    'source': 'Only active approved sources can be verified.'
+                })
+
             if self.verified_by and not self.verified_by.is_admin:
                 raise ValidationError({
                     'verified_by': 'Only an administrator can verify source records.'
@@ -750,6 +778,25 @@ class OpportunitySourceRecord(models.Model):
                 'opportunity': (
                     'An unverified or unavailable source record cannot be linked '
                     'to a published opportunity.'
+                )
+            })
+
+        if (
+            self.scholarship_id
+            and self.scholarship.is_published
+            and (
+                self.verification_status != 'VERIFIED'
+                or self.source_status != 'AVAILABLE'
+                or not self.verified_at
+                or not self.verified_by_id
+                or not self.source.is_active
+                or not self.verified_by.is_admin
+            )
+        ):
+            raise ValidationError({
+                'scholarship': (
+                    'An unverified or unavailable source record cannot be '
+                    'linked to a published scholarship.'
                 )
             })
 
@@ -795,9 +842,59 @@ class OpportunitySourceRecord(models.Model):
             self.official_application_url
         )
 
-        self.full_clean()
+        with transaction.atomic():
+            if (
+                self.pk
+                and self.source_status != 'AVAILABLE'
+                and self.verification_status == 'VERIFIED'
+            ):
+                previous_status = OpportunitySourceRecord.objects.filter(
+                    pk=self.pk,
+                ).values_list(
+                    'verification_status',
+                    flat=True,
+                ).first()
+                if previous_status == 'VERIFIED':
+                    self.verification_status = 'SOURCE_UNAVAILABLE'
+                    self.verified_at = None
+                    self.verified_by = None
 
-        return super().save(*args, **kwargs)
+            scholarship_ids = set()
+            if self.scholarship_id:
+                scholarship_ids.add(self.scholarship_id)
+            if self.pk:
+                previous = OpportunitySourceRecord.objects.filter(
+                    pk=self.pk,
+                ).values_list('scholarship_id', flat=True).first()
+                if previous:
+                    scholarship_ids.add(previous)
+
+            is_verified_record = (
+                self.verification_status == 'VERIFIED'
+                and self.source_status == 'AVAILABLE'
+                and self.verified_at is not None
+                and self.verified_by_id is not None
+                and self.source.is_active
+                and self.verified_by.is_admin
+            )
+            if not is_verified_record and scholarship_ids:
+                from apps.scholarships.models import Scholarship
+
+                Scholarship.objects.filter(
+                    pk__in=scholarship_ids,
+                    is_published=True,
+                ).update(
+                    is_published=False,
+                    updated_at=timezone.now(),
+                )
+                linked_scholarship = self._state.fields_cache.get(
+                    'scholarship'
+                )
+                if linked_scholarship:
+                    linked_scholarship.is_published = False
+
+            self.full_clean()
+            return super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.source_title} ({self.source.name})'

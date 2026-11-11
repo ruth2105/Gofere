@@ -1,5 +1,5 @@
-from django.contrib import admin
-from django.contrib import messages
+
+from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
@@ -24,6 +24,7 @@ class OpportunityAdmin(admin.ModelAdmin):
         'is_published',
         'is_featured',
     )
+
     list_filter = (
         'is_published',
         'category',
@@ -32,8 +33,21 @@ class OpportunityAdmin(admin.ModelAdmin):
         'level',
         'is_featured',
     )
-    search_fields = ('title', 'organization', 'country', 'description')
-    readonly_fields = ('id', 'slug', 'created_at', 'updated_at')
+
+    search_fields = (
+        'title',
+        'organization',
+        'country',
+        'description',
+    )
+
+    readonly_fields = (
+        'id',
+        'slug',
+        'created_at',
+        'updated_at',
+    )
+
     fieldsets = (
         ('Opportunity', {
             'fields': (
@@ -48,7 +62,10 @@ class OpportunityAdmin(admin.ModelAdmin):
             )
         }),
         ('Eligibility and benefits', {
-            'fields': ('eligibility', 'benefits')
+            'fields': (
+                'eligibility',
+                'benefits',
+            )
         }),
         ('Application', {
             'fields': (
@@ -59,24 +76,39 @@ class OpportunityAdmin(admin.ModelAdmin):
             )
         }),
         ('Publication', {
-            'fields': ('is_published', 'is_featured')
+            'fields': (
+                'is_published',
+                'is_featured',
+            )
         }),
         ('Timestamps', {
-            'fields': ('id', 'created_at', 'updated_at')
+            'fields': (
+                'id',
+                'created_at',
+                'updated_at',
+            )
         }),
     )
-    actions = ('publish_selected', 'unpublish_selected')
+
+    actions = (
+        'publish_selected',
+        'unpublish_selected',
+    )
 
     @admin.action(description='Publish selected opportunities')
     def publish_selected(self, request, queryset):
         published = 0
         errors = []
+
         for opportunity in queryset:
             opportunity.is_published = True
+
             try:
                 opportunity.save()
             except ValidationError as error:
-                errors.append(f'{opportunity.title}: {error}')
+                errors.append(
+                    f'{opportunity.title}: {error}'
+                )
             else:
                 published += 1
 
@@ -86,16 +118,19 @@ class OpportunityAdmin(admin.ModelAdmin):
                 f'{published} opportunity record(s) published.',
                 level=messages.SUCCESS,
             )
+
         if errors:
             self.message_user(
                 request,
-                'Some opportunities could not be published: ' + '; '.join(errors),
+                'Some opportunities could not be published: '
+                + '; '.join(errors),
                 level=messages.ERROR,
             )
 
     @admin.action(description='Unpublish selected opportunities')
     def unpublish_selected(self, request, queryset):
         updated = queryset.update(is_published=False)
+
         self.message_user(
             request,
             f'{updated} opportunity record(s) unpublished.',
@@ -115,8 +150,20 @@ class OpportunitySourceAdmin(admin.ModelAdmin):
         'last_success_at',
         'updated_at',
     )
-    list_filter = ('is_active', 'source_type', 'collection_method', 'reliability_status')
-    search_fields = ('name', 'organization', 'base_url')
+
+    list_filter = (
+        'is_active',
+        'source_type',
+        'collection_method',
+        'reliability_status',
+    )
+
+    search_fields = (
+        'name',
+        'organization',
+        'base_url',
+    )
+
     readonly_fields = (
         'last_success_at',
         'last_failure_at',
@@ -125,6 +172,7 @@ class OpportunitySourceAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
+
     date_hierarchy = 'updated_at'
 
 
@@ -141,8 +189,19 @@ class CollectionRunAdmin(admin.ModelAdmin):
         'records_updated',
         'error_count',
     )
-    list_filter = ('status', 'trigger_type', 'source')
-    search_fields = ('source__name', 'source__organization', 'collector_version')
+
+    list_filter = (
+        'status',
+        'trigger_type',
+        'source',
+    )
+
+    search_fields = (
+        'source__name',
+        'source__organization',
+        'collector_version',
+    )
+
     readonly_fields = (
         'source',
         'trigger_type',
@@ -160,6 +219,7 @@ class CollectionRunAdmin(admin.ModelAdmin):
         'collector_version',
         'request_metadata',
     )
+
     date_hierarchy = 'started_at'
 
 
@@ -174,13 +234,20 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
         'verification_status',
         'last_seen_at',
     )
-    list_filter = ('source_status', 'verification_status', 'source')
+
+    list_filter = (
+        'source_status',
+        'verification_status',
+        'source',
+    )
+
     search_fields = (
         'source_title',
         'normalized_title',
         'source_record_key',
         'official_source_url',
     )
+
     readonly_fields = (
         'source',
         'collection_run',
@@ -208,7 +275,9 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
+
     date_hierarchy = 'last_seen_at'
+
     actions = (
         'mark_selected_verified',
         'mark_selected_needs_review',
@@ -219,15 +288,24 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
     def mark_selected_verified(self, request, queryset):
         verified = 0
         errors = []
-        for record in queryset.select_related('opportunity', 'scholarship'):
+
+        records = queryset.select_related(
+            'opportunity',
+            'scholarship',
+        )
+
+        for record in records:
             record.verification_status = 'VERIFIED'
             record.verified_at = timezone.now()
             record.verified_by = request.user
+
             try:
                 with transaction.atomic():
                     record.save()
             except ValidationError as error:
-                errors.append(f'{record.source_title}: {error}')
+                errors.append(
+                    f'{record.source_title}: {error}'
+                )
             else:
                 verified += 1
 
@@ -237,10 +315,12 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
                 f'{verified} source record(s) verified.',
                 level=messages.SUCCESS,
             )
+
         if errors:
             self.message_user(
                 request,
-                'Some source records could not be verified: ' + '; '.join(errors),
+                'Some source records could not be verified: '
+                + '; '.join(errors),
                 level=messages.ERROR,
             )
 
@@ -262,21 +342,38 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
             'rejected',
         )
 
-    def _set_verification_status(self, request, queryset, status, description):
+    def _set_verification_status(
+        self,
+        request,
+        queryset,
+        status,
+        description,
+    ):
         updated = 0
         errors = []
-        for record in queryset.select_related('opportunity'):
+
+        records = queryset.select_related('opportunity')
+
+        for record in records:
             record.verification_status = status
             record.verified_at = None
             record.verified_by = None
+
             try:
                 with transaction.atomic():
-                    if record.opportunity_id and record.opportunity.is_published:
+                    if (
+                        record.opportunity_id
+                        and record.opportunity.is_published
+                    ):
                         record.opportunity.is_published = False
                         record.opportunity.save()
+
                     record.save()
+
             except ValidationError as error:
-                errors.append(f'{record.source_title}: {error}')
+                errors.append(
+                    f'{record.source_title}: {error}'
+                )
             else:
                 updated += 1
 
@@ -286,9 +383,11 @@ class OpportunitySourceRecordAdmin(admin.ModelAdmin):
                 f'{updated} source record(s) {description}.',
                 level=messages.SUCCESS,
             )
+
         if errors:
             self.message_user(
                 request,
-                'Some source records could not be updated: ' + '; '.join(errors),
+                'Some source records could not be updated: '
+                + '; '.join(errors),
                 level=messages.ERROR,
             )

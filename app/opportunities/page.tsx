@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import {
   api,
+  CountryApiRecord,
   OpportunityApiRecord,
   PaginatedResponse,
 } from '@/lib/api/client';
@@ -55,6 +56,8 @@ function formatDeadline(value: string | null): string {
 
 export default function OpportunitiesPage() {
   const [results, setResults] = useState<PaginatedResponse<OpportunityApiRecord> | null>(null);
+  const [countries, setCountries] = useState<CountryApiRecord[]>([]);
+  const [countryError, setCountryError] = useState('');
   const [filters, setFilters] = useState<OpportunityFilters>({
     search: '',
     country: '',
@@ -68,6 +71,23 @@ export default function OpportunitiesPage() {
   const [retryKey, setRetryKey] = useState(0);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    api.countries.list()
+      .then((records) => {
+        if (active) setCountries(records);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setCountryError(getApiErrorMessage(error, 'Country suggestions could not be loaded.'));
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -130,10 +150,6 @@ export default function OpportunitiesPage() {
     setErrorMessage('');
   };
 
-  const knownCountries = Array.from(new Set(
-    results?.results.map((opportunity) => opportunity.country).filter(Boolean) ?? []
-  )).sort((a, b) => a.localeCompare(b));
-
   return (
     <div className="flex min-h-screen flex-col">
       <Navigation />
@@ -178,8 +194,17 @@ export default function OpportunitiesPage() {
                 className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-brand-gold/20"
               />
               <datalist id="opportunity-countries">
-                {knownCountries.map((country) => <option key={country} value={country} />)}
+                {countries.map((country) => (
+                  <option key={country.code} value={country.name}>
+                    {country.flag_emoji} {country.code}
+                  </option>
+                ))}
               </datalist>
+              {countryError && (
+                <p className="mt-1 text-sm text-red-700" role="status">
+                  {countryError}
+                </p>
+              )}
             </div>
             <Select
               label="Category"

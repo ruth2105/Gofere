@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from apps.accounts.models import User
+from apps.notifications.models import Notification
 from apps.scholarships.models import Scholarship
 from apps.universities.models import University
 from .models import Application
@@ -565,3 +566,82 @@ class ApplicationApiTests(APITestCase):
             'total': 0,
             'by_status': {},
         })
+
+    def test_assigned_consultant_can_start_review_of_submitted_application(self):
+        consultant = User.objects.create_user(
+            email='consultant@example.com',
+            password='SecurePassword123!',
+            role='CONSULTANT',
+        )
+        application = self.create_application()
+        application.consultant = consultant
+        application.status = 'SUBMITTED'
+        application.save(update_fields=['consultant', 'status'])
+        self.client.force_authenticate(user=consultant)
+
+        response = self.client.post(
+            f'/api/v1/applications/consultant/assigned/{application.id}/start-review/',
+            {'note': 'Checking the supporting documents.'},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'UNDER_REVIEW')
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'UNDER_REVIEW')
+        self.assertEqual(
+            application.status_updates[-1]['note'],
+            'Checking the supporting documents.',
+        )
+        notification = Notification.objects.get(user=self.student)
+        self.assertEqual(notification.title, 'Application review started')
+
+    def test_consultant_cannot_start_review_for_unassigned_application(self):
+        consultant = User.objects.create_user(
+            email='consultant@example.com',
+            password='SecurePassword123!',
+            role='CONSULTANT',
+        )
+        application = self.create_application()
+        application.status = 'SUBMITTED'
+        application.save(update_fields=['status'])
+        self.client.force_authenticate(user=consultant)
+
+        response = self.client.post(
+            f'/api/v1/applications/consultant/assigned/{application.id}/start-review/',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'SUBMITTED')
+
+    def test_consultant_cannot_start_review_before_student_submission(self):
+        consultant = User.objects.create_user(
+            email='consultant@example.com',
+            password='SecurePassword123!',
+            role='CONSULTANT',
+        )
+        application = self.create_application()
+        application.consultant = consultant
+        application.save(update_fields=['consultant'])
+        self.client.force_authenticate(user=consultant)
+
+        response = self.client.post(
+            f'/api/v1/applications/consultant/assigned/{application.id}/start-review/',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'DRAFT')
+
+    def test_student_cannot_use_consultant_review_action(self):
+        application = self.create_application()
+        application.status = 'SUBMITTED'
+        application.save(update_fields=['status'])
+
+        response = self.client.post(
+            f'/api/v1/applications/consultant/assigned/{application.id}/start-review/',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'SUBMITTED')

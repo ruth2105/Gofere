@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
@@ -18,6 +18,24 @@ export default function StudentLoginPage() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [verificationRequired, setVerificationRequired] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
+  const [resendError, setResendError] = useState('');
+  const [resending, setResending] = useState(false);
+  const [resendAvailableAt, setResendAvailableAt] = useState(0);
+  const [secondsRemaining, setSecondsRemaining] = useState(0);
+
+  useEffect(() => {
+    if (!resendAvailableAt) return;
+    const updateCountdown = () => {
+      const remaining = Math.max(0, Math.ceil((resendAvailableAt - Date.now()) / 1000));
+      setSecondsRemaining(remaining);
+      if (remaining === 0) setResendAvailableAt(0);
+    };
+    updateCountdown();
+    const timer = window.setInterval(updateCountdown, 1000);
+    return () => window.clearInterval(timer);
+  }, [resendAvailableAt]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,9 +51,27 @@ export default function StudentLoginPage() {
             : '/student'
       );
     } catch (error: unknown) {
-      setErrorMessage(getApiErrorMessage(error, 'Sign in failed. Please check your details and try again.'));
+      const message = getApiErrorMessage(error, 'Sign in failed. Please check your details and try again.');
+      setErrorMessage(message);
+      setVerificationRequired(message.toLowerCase().includes('verify your email'));
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (!email || resending || secondsRemaining > 0) return;
+    setResending(true);
+    setResendMessage('');
+    setResendError('');
+    try {
+      const result = await api.auth.resendVerificationEmail(email);
+      setResendMessage(result.message);
+      setResendAvailableAt(Date.now() + result.cooldown_seconds * 1000);
+    } catch (error: unknown) {
+      setResendError(getApiErrorMessage(error, 'The verification email could not be requested.'));
+    } finally {
+      setResending(false);
     }
   };
 
@@ -83,6 +119,32 @@ export default function StudentLoginPage() {
                   <p className="rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
                     {errorMessage}
                   </p>
+                )}
+
+                {verificationRequired && (
+                  <div className="space-y-3 rounded-lg bg-amber-50 p-4">
+                    <p className="text-sm text-amber-900">
+                      Verify your email before signing in. You can request another verification message below.
+                    </p>
+                    {resendMessage && (
+                      <p className="text-sm text-green-800" role="status">{resendMessage}</p>
+                    )}
+                    {resendError && (
+                      <p className="text-sm text-red-800" role="alert">{resendError}</p>
+                    )}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleResendVerification}
+                      isLoading={resending}
+                      disabled={!email || resending || secondsRemaining > 0}
+                    >
+                      {secondsRemaining > 0
+                        ? `Request another email in ${secondsRemaining}s`
+                        : resending ? 'Requesting…' : 'Resend verification email'}
+                    </Button>
+                  </div>
                 )}
 
                 <Button type="submit" variant="primary" className="w-full" isLoading={submitting}>

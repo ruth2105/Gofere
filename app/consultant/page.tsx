@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/layout/Footer';
 import { Navigation } from '@/components/layout/Navigation';
@@ -41,7 +42,7 @@ export default function ConsultantDashboardPage() {
   const [authRetryKey, setAuthRetryKey] = useState(0);
   const [forbidden, setForbidden] = useState(false);
   const [applications, setApplications] = useState<PaginatedResponse<ConsultantApplicationApiRecord> | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
   const [searchInput, setSearchInput] = useState('');
@@ -49,6 +50,9 @@ export default function ConsultantDashboardPage() {
   const [status, setStatus] = useState<ConsultantApplicationApiRecord['status'] | ''>('');
   const [page, setPage] = useState(1);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [reviewNotes, setReviewNotes] = useState<Record<string, string>>({});
+  const [reviewErrors, setReviewErrors] = useState<Record<string, string>>({});
+  const [updatingReviewId, setUpdatingReviewId] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -81,8 +85,6 @@ export default function ConsultantDashboardPage() {
   useEffect(() => {
     if (!user || user.role !== 'CONSULTANT') return;
     let active = true;
-    setLoading(true);
-    setErrorMessage('');
 
     api.consultant.assignedApplications({
       page,
@@ -110,6 +112,9 @@ export default function ConsultantDashboardPage() {
     event.preventDefault();
     setPage(1);
     setSearch(searchInput.trim());
+    setLoading(true);
+    setErrorMessage('');
+    setReloadKey((key) => key + 1);
   };
 
   const handleLogout = async () => {
@@ -118,6 +123,31 @@ export default function ConsultantDashboardPage() {
       await api.auth.logout();
     } finally {
       router.replace('/student/login');
+    }
+  };
+
+  const handleStartReview = async (applicationId: string) => {
+    setUpdatingReviewId(applicationId);
+    setReviewErrors((current) => ({ ...current, [applicationId]: '' }));
+    try {
+      const updatedApplication = await api.consultant.startApplicationReview(
+        applicationId,
+        reviewNotes[applicationId] ?? ''
+      );
+      setApplications((current) => current && ({
+        ...current,
+        results: current.results.map((application) =>
+          application.id === applicationId ? updatedApplication : application
+        ),
+      }));
+      setReviewNotes((current) => ({ ...current, [applicationId]: '' }));
+    } catch (error: unknown) {
+      setReviewErrors((current) => ({
+        ...current,
+        [applicationId]: getApiErrorMessage(error, 'The application could not be moved into review.'),
+      }));
+    } finally {
+      setUpdatingReviewId('');
     }
   };
 
@@ -150,7 +180,15 @@ export default function ConsultantDashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">Consultant Workspace</h1>
           <p className="mt-2 text-gray-600">Applications assigned to {user?.full_name || user?.email}.</p>
         </div>
-        <Button variant="outline" isLoading={loggingOut} onClick={handleLogout}>Sign Out</Button>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/notifications">
+            <Button variant="outline">Notifications</Button>
+          </Link>
+          <Link href="/consultant/consultations">
+            <Button variant="outline">Manage Consultations</Button>
+          </Link>
+          <Button variant="outline" isLoading={loggingOut} onClick={handleLogout}>Sign Out</Button>
+        </div>
       </header>
 
       <Card className="mb-6">
@@ -179,6 +217,9 @@ export default function ConsultantDashboardPage() {
                 onChange={(event) => {
                   setPage(1);
                   setStatus(event.target.value as ConsultantApplicationApiRecord['status'] | '');
+                  setLoading(true);
+                  setErrorMessage('');
+                  setReloadKey((key) => key + 1);
                 }}
                 className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600"
               >
@@ -197,6 +238,9 @@ export default function ConsultantDashboardPage() {
                 setSearch('');
                 setStatus('');
                 setPage(1);
+                setLoading(true);
+                setErrorMessage('');
+                setReloadKey((key) => key + 1);
               }}
             >
               Clear filters
@@ -208,7 +252,14 @@ export default function ConsultantDashboardPage() {
       {errorMessage ? (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800" role="alert">
           <p>{errorMessage}</p>
-          <Button variant="outline" onClick={() => setReloadKey((key) => key + 1)}>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setLoading(true);
+              setErrorMessage('');
+              setReloadKey((key) => key + 1);
+            }}
+          >
             Try Again
           </Button>
         </div>
@@ -245,6 +296,38 @@ export default function ConsultantDashboardPage() {
                   <p><span className="font-semibold">Deadline:</span> {formatDate(application.deadline_date)}</p>
                   <p><span className="font-semibold">Last updated:</span> {formatDate(application.updated_at)}</p>
                 </CardContent>
+                {application.status === 'SUBMITTED' && (
+                  <CardContent className="border-t border-gray-100">
+                    <label
+                      htmlFor={`review-note-${application.id}`}
+                      className="mb-1.5 block text-sm font-medium text-gray-700"
+                    >
+                      Note for the student (optional)
+                    </label>
+                    <textarea
+                      id={`review-note-${application.id}`}
+                      value={reviewNotes[application.id] ?? ''}
+                      maxLength={500}
+                      rows={2}
+                      onChange={(event) => setReviewNotes((current) => ({
+                        ...current,
+                        [application.id]: event.target.value,
+                      }))}
+                      className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600"
+                    />
+                    {reviewErrors[application.id] && (
+                      <p className="mt-2 text-sm text-red-700" role="alert">{reviewErrors[application.id]}</p>
+                    )}
+                    <Button
+                      className="mt-3"
+                      isLoading={updatingReviewId === application.id}
+                      disabled={Boolean(updatingReviewId && updatingReviewId !== application.id)}
+                      onClick={() => handleStartReview(application.id)}
+                    >
+                      Start Review
+                    </Button>
+                  </CardContent>
+                )}
               </Card>
             ))}
           </div>
@@ -252,7 +335,11 @@ export default function ConsultantDashboardPage() {
             <Button
               variant="outline"
               disabled={!applications?.previous}
-              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              onClick={() => {
+                setPage((current) => Math.max(1, current - 1));
+                setLoading(true);
+                setErrorMessage('');
+              }}
             >
               Previous
             </Button>
@@ -260,7 +347,11 @@ export default function ConsultantDashboardPage() {
             <Button
               variant="outline"
               disabled={!applications?.next}
-              onClick={() => setPage((current) => current + 1)}
+              onClick={() => {
+                setPage((current) => current + 1);
+                setLoading(true);
+                setErrorMessage('');
+              }}
             >
               Next
             </Button>

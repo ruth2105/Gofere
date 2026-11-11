@@ -1,4 +1,11 @@
-# Gofer Exam Platform - Final Status Report
+# Historical Status Report — Superseded
+
+> **This report is obsolete and must not be used to infer current functionality
+> or production readiness.** It contains outdated statements about demo data,
+> authentication, deployment, and testing. For verified current status and
+> blockers, see [PROJECT_AUDIT.md](./PROJECT_AUDIT.md).
+
+The report below is retained only as a historical snapshot.
 
 ## ✅ All Critical Issues Resolved
 

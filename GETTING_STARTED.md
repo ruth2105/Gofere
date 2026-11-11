@@ -204,9 +204,8 @@ const navLinks = [
    - Integrate cloud storage (AWS S3, Cloudinary)
 
 4. **Email Notifications**
-   - Install Nodemailer or Resend
-   - Send consultation confirmations
-   - Application status updates
+   - Student verification emails use Django's configured email backend; configure SMTP/provider credentials and a verified sender in `backend\.env` for production.
+   - Other event emails (consultations and application status) remain future work.
 
 ## 📊 Demo Data Available
 

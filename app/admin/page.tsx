@@ -121,7 +121,10 @@ export default function AdminDashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">Admin Overview</h1>
           <p className="mt-2 text-gray-600">Platform totals for {user?.full_name || user?.email}.</p>
         </div>
-        <Button variant="outline" isLoading={loggingOut} onClick={handleLogout}>Sign Out</Button>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" onClick={() => router.push('/notifications')}>Notifications</Button>
+          <Button variant="outline" isLoading={loggingOut} onClick={handleLogout}>Sign Out</Button>
+        </div>
       </header>
 
       <section aria-labelledby="accounts-heading" className="mb-8">
